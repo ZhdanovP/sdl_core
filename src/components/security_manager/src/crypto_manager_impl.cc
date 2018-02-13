@@ -141,13 +141,16 @@ bool CryptoManagerImpl::Init() {
       LOG4CXX_WARN(logger_, "OpenSSL does not support SSL3 protocol");
       return false;
 #else
+      LOG4CXX_DEBUG(logger_, "SSLv3 is used");
       method = is_server ? SSLv3_server_method() : SSLv3_client_method();
       break;
 #endif
     case TLSv1:
+      LOG4CXX_DEBUG(logger_, "TLSv1 is used");
       method = is_server ? TLSv1_server_method() : TLSv1_client_method();
       break;
     case TLSv1_1:
+      LOG4CXX_DEBUG(logger_, "TLSv1_1 is used");
 #if OPENSSL_VERSION_NUMBER < TLS1_1_MINIMAL_VERSION
       LOG4CXX_WARN(
           logger_,
@@ -158,6 +161,7 @@ bool CryptoManagerImpl::Init() {
 #endif
       break;
     case TLSv1_2:
+      LOG4CXX_DEBUG(logger_, "TLSv1_2 is used");
 #if OPENSSL_VERSION_NUMBER < TLS1_1_MINIMAL_VERSION
       LOG4CXX_WARN(
           logger_,
@@ -166,6 +170,10 @@ bool CryptoManagerImpl::Init() {
 #else
       method = is_server ? TLSv1_2_server_method() : TLSv1_2_client_method();
 #endif
+      break;
+    case DTLSv1:
+      LOG4CXX_DEBUG(logger_, "DTLSv1 is used");
+      method = is_server ? DTLSv1_server_method() : DTLSv1_client_method();
       break;
     default:
       LOG4CXX_ERROR(logger_,
