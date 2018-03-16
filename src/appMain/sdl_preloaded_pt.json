@@ -546,6 +546,12 @@
                         "FULL",
                         "LIMITED",
                         "NONE"]
+                    },
+                    "OnRCStatus": {
+                        "hmi_levels": ["BACKGROUND",
+                        "FULL",
+                        "LIMITED",
+                        "NONE"]
                     }
                 }
             },
