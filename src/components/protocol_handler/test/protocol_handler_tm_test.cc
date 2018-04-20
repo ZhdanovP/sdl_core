@@ -2084,7 +2084,8 @@ TEST_F(ProtocolHandlerImplTest,
       transport_manager_mock,
       SendMessageToDevice(ExpectedMessage(
           FRAME_TYPE_SINGLE, FRAME_DATA_SINGLE, PROTECTION_OFF, kControl)))
-      .WillOnce(Return(E_SUCCESS));
+      .WillOnce(DoAll(NotifyTestAsyncWaiter(waiter), Return(E_SUCCESS)));
+  times++;
 
   // Act
   protocol_handler_impl->SendMessageToMobileApp(message, is_final);
