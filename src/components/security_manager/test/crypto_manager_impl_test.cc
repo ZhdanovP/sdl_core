@@ -139,25 +139,22 @@ TEST_F(CryptoManagerTest, WrongInit) {
   // Unknown protocol version
   security_manager::Protocol UNKNOWN =
       static_cast<security_manager::Protocol>(-1);
-
-  EXPECT_CALL(*mock_security_manager_settings_, security_manager_mode())
-      .WillRepeatedly(Return(security_manager::SERVER));
-  EXPECT_CALL(*mock_security_manager_settings_,
-              security_manager_protocol_name()).WillOnce(Return(UNKNOWN));
-  EXPECT_FALSE(crypto_manager_->Init());
-
-  EXPECT_NE(std::string(), crypto_manager_->LastError());
   // Unexistent cipher value
   const std::string invalid_cipher = "INVALID_UNKNOWN_CIPHER";
+  const security_manager::Mode mode = security_manager::SERVER;
+
+  SetInitialValues(mode, UNKNOWN, invalid_cipher);
+
+  EXPECT_FALSE(crypto_manager_->Init());
+  EXPECT_NE(std::string(), crypto_manager_->LastError());
+
   EXPECT_CALL(*mock_security_manager_settings_,
               security_manager_protocol_name())
       .WillOnce(Return(security_manager::TLSv1_2));
   EXPECT_CALL(*mock_security_manager_settings_, certificate_data())
       .WillOnce(ReturnRef(certificate_data_base64_));
-  EXPECT_CALL(*mock_security_manager_settings_, ciphers_list())
-      .WillRepeatedly(ReturnRef(invalid_cipher));
-  EXPECT_FALSE(crypto_manager_->Init());
 
+  EXPECT_FALSE(crypto_manager_->Init());
   EXPECT_NE(std::string(), crypto_manager_->LastError());
 }
 
