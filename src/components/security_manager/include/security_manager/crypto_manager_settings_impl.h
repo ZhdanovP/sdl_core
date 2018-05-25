@@ -17,6 +17,7 @@ class CryptoManagerSettingsImpl : public CryptoManagerSettings {
     return profile_.ssl_mode() == "SERVER" ? security_manager::SERVER
                                            : security_manager::CLIENT;
   }
+
   Protocol security_manager_protocol_name() const OVERRIDE {
     CREATE_LOGGERPTR_LOCAL(logger_, "SecurityManager")
 
@@ -38,21 +39,35 @@ class CryptoManagerSettingsImpl : public CryptoManagerSettings {
         "Unknown protocol: " << profile_.security_manager_protocol_name());
     return static_cast<security_manager::Protocol>(-1);
   }
+
   bool verify_peer() const OVERRIDE {
     return profile_.verify_peer();
   }
+
   const std::string& certificate_data() const OVERRIDE {
     return certificate_data_;
   }
+
   const std::string& ciphers_list() const OVERRIDE {
     return profile_.ciphers_list();
   }
+
   const std::string& ca_cert_path() const OVERRIDE {
     return profile_.ca_cert_path();
   }
+
+  const std::string& module_cert_path() const OVERRIDE {
+    return profile_.cert_path();
+  }
+
+  const std::string& module_key_path() const OVERRIDE {
+    return profile_.key_path();
+  }
+
   size_t update_before_hours() const OVERRIDE {
     return profile_.update_before_hours();
   }
+
   size_t maximum_payload_size() const OVERRIDE {
     return profile_.maximum_payload_size();
   }
