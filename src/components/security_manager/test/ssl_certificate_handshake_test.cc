@@ -56,6 +56,10 @@ namespace custom_str = utils::custom_string;
 namespace {
 const std::string server_ca_cert_filename = "server";
 const std::string client_ca_cert_filename = "client";
+const std::string client_cert_filename = "client.crt";
+const std::string server_cert_filename = "server.crt";
+const std::string client_key_filename = "client_private.key";
+const std::string server_key_filename = "server_private.key";
 const std::string client_certificate = "client/client_credential.pem";
 const std::string server_certificate = "server/spt_credential.pem";
 const std::string server_unsigned_cert_file =
@@ -117,6 +121,10 @@ class SSLHandshakeTest : public testing::Test {
         .WillByDefault(ReturnRef(server_ciphers_list_));
     ON_CALL(*mock_server_manager_settings, ca_cert_path())
         .WillByDefault(ReturnRef(server_ca_certificate_path_));
+    ON_CALL(*mock_server_manager_settings, module_cert_path())
+        .WillByDefault(ReturnRef(server_cert_filename));
+    ON_CALL(*mock_server_manager_settings, module_key_path())
+        .WillByDefault(ReturnRef(server_key_filename));
     ON_CALL(*mock_server_manager_settings, verify_peer())
         .WillByDefault(Return(verify_peer));
   }
@@ -139,6 +147,10 @@ class SSLHandshakeTest : public testing::Test {
         .WillByDefault(ReturnRef(client_ciphers_list_));
     ON_CALL(*mock_client_manager_settings, ca_cert_path())
         .WillByDefault(ReturnRef(client_ca_certificate_path_));
+    ON_CALL(*mock_client_manager_settings, module_cert_path())
+        .WillByDefault(ReturnRef(client_cert_filename));
+    ON_CALL(*mock_client_manager_settings, module_key_path())
+        .WillByDefault(ReturnRef(client_key_filename));
     ON_CALL(*mock_client_manager_settings, verify_peer())
         .WillByDefault(Return(verify_peer));
   }

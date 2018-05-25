@@ -51,6 +51,10 @@ using ::testing::NiceMock;
 namespace {
 const size_t kUpdatesBeforeHour = 24;
 const std::string kCaPath = "";
+const std::string kClientCertPath = "client_certificate.crt";
+const std::string kClientPrivateKeyPath = "client_private.key";
+const std::string kServerCertPath = "server_certificate.crt";
+const std::string kServerPrivateKeyPath = "server_private.key";
 const uint8_t* kServerBuf;
 const uint8_t* kClientBuf;
 const std::string kAllCiphers = "ALL";
@@ -127,6 +131,12 @@ class SSLTest : public testing::Test {
         .WillRepeatedly(ReturnRef(kCaPath));
     EXPECT_CALL(*mock_crypto_manager_settings_, verify_peer())
         .WillOnce(Return(false));
+
+    ON_CALL(*mock_crypto_manager_settings_, module_cert_path())
+        .WillByDefault(ReturnRef(kServerCertPath));
+    ON_CALL(*mock_crypto_manager_settings_, module_key_path())
+        .WillByDefault(ReturnRef(kServerPrivateKeyPath));
+
     const bool crypto_manager_initialization = crypto_manager_->Init();
     EXPECT_TRUE(crypto_manager_initialization);
 
@@ -150,6 +160,12 @@ class SSLTest : public testing::Test {
         .WillRepeatedly(ReturnRef(kCaPath));
     EXPECT_CALL(*mock_client_manager_settings_, verify_peer())
         .WillOnce(Return(false));
+
+    ON_CALL(*mock_client_manager_settings_, module_cert_path())
+        .WillByDefault(ReturnRef(kClientCertPath));
+    ON_CALL(*mock_client_manager_settings_, module_key_path())
+        .WillByDefault(ReturnRef(kClientPrivateKeyPath));
+
     const bool client_manager_initialization = client_manager_->Init();
     EXPECT_TRUE(client_manager_initialization);
 
@@ -285,6 +301,10 @@ class SSLTestParam : public testing::TestWithParam<ProtocolAndCipher> {
         .WillByDefault(ReturnRef(kCaPath));
     ON_CALL(*mock_crypto_manager_settings_, verify_peer())
         .WillByDefault(Return(false));
+    ON_CALL(*mock_crypto_manager_settings_, module_cert_path())
+        .WillByDefault(ReturnRef(kServerCertPath));
+    ON_CALL(*mock_crypto_manager_settings_, module_key_path())
+        .WillByDefault(ReturnRef(kServerPrivateKeyPath));
   }
   void SetClientInitialValues(security_manager::Protocol protocol,
                               const std::string& client_ciphers_list) {
@@ -300,6 +320,10 @@ class SSLTestParam : public testing::TestWithParam<ProtocolAndCipher> {
         .WillByDefault(ReturnRef(kCaPath));
     ON_CALL(*mock_client_manager_settings_, verify_peer())
         .WillByDefault(Return(false));
+    ON_CALL(*mock_client_manager_settings_, module_cert_path())
+        .WillByDefault(ReturnRef(kClientCertPath));
+    ON_CALL(*mock_client_manager_settings_, module_key_path())
+        .WillByDefault(ReturnRef(kClientPrivateKeyPath));
   }
 
   utils::SharedPtr<NiceMock<security_manager_test::MockCryptoManagerSettings> >

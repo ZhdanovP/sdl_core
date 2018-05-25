@@ -52,6 +52,8 @@ namespace {
 const size_t kUpdatesBeforeHour = 24;
 const std::string kAllCiphers = "ALL";
 const std::string kCaCertPath = "";
+const std::string kCertPath = "certificate.crt";
+const std::string kPrivateKeyPath = "private.key";
 
 #ifdef __QNXNTO__
 const std::string kFordCipher = SSL3_TXT_RSA_DES_192_CBC3_SHA;
@@ -111,6 +113,10 @@ class CryptoManagerTest : public testing::Test {
         .WillByDefault(ReturnRef(cipher));
     ON_CALL(*mock_security_manager_settings_, ca_cert_path())
         .WillByDefault(ReturnRef(kCaCertPath));
+    ON_CALL(*mock_security_manager_settings_, module_cert_path())
+        .WillByDefault(ReturnRef(kCertPath));
+    ON_CALL(*mock_security_manager_settings_, module_key_path())
+        .WillByDefault(ReturnRef(kPrivateKeyPath));
     ON_CALL(*mock_security_manager_settings_, verify_peer())
         .WillByDefault(Return(false));
   }
