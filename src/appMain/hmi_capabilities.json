@@ -472,6 +472,7 @@
                 ],
 				"seatControlCapabilities": [
                 {
+                        "moduleName": "driver_seat",
                         "heatingEnabledAvailable" : true,
                         "coolingEnabledAvailable": true,
                         "heatingLevelAvailable": true,
