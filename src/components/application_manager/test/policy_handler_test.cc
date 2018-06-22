@@ -1642,8 +1642,6 @@ TEST_F(PolicyHandlerTest,
   TestActivateApp(connection_key, correlation_id);
 
   const bool is_allowed = true;
-  std::vector<std::string> device_macs;
-  device_macs.push_back(kPolicyAppId_);
 
   // Not called because id was setted
   EXPECT_CALL(conn_handler, GetConnectedDevicesMAC(_)).Times(0);
@@ -1657,11 +1655,9 @@ TEST_F(PolicyHandlerTest,
 TEST_F(PolicyHandlerTest, OnSnapshotCreated_UrlAdded) {
   EnablePolicyAndPolicyManagerMock();
   BinaryMessage msg;
-  EndpointUrls test_data;
   EndpointData data("some_data");
   std::vector<int> retry_delay_seconds;
   const uint32_t timeout_exchange = 10u;
-  test_data.push_back(data);
 
   ExtendedPolicyExpectations();
 
@@ -1671,8 +1667,8 @@ TEST_F(PolicyHandlerTest, OnSnapshotCreated_UrlAdded) {
   policy_handler_.OnSnapshotCreated(msg, retry_delay_seconds, timeout_exchange);
 }
 #else  // EXTERNAL_PROPRIETARY_MODE
-// TODO(LevchenkoS): Find out what is wrong with this test on HTTP Policy
-TEST_F(PolicyHandlerTest, DISABLED_OnSnapshotCreated_UrlAdded) {
+
+TEST_F(PolicyHandlerTest, OnSnapshotCreated_UrlAdded) {
   EnablePolicyAndPolicyManagerMock();
   BinaryMessage msg;
   EndpointUrls test_data;
@@ -1682,9 +1678,18 @@ TEST_F(PolicyHandlerTest, DISABLED_OnSnapshotCreated_UrlAdded) {
 
 #ifdef PROPRIETARY_MODE
   ExtendedPolicyExpectations();
-#else
+#else   // HTTP mode
   EXPECT_CALL(*mock_policy_manager_, GetUpdateUrls("0x07", _))
       .WillRepeatedly(SetArgReferee<1>(test_data));
+
+  // Check expectations for get app id
+  GetAppIDForSending();
+  // Expectations
+  EXPECT_CALL(app_manager_, application(kAppId1_))
+      .WillRepeatedly(Return(mock_app_));
+  EXPECT_CALL(*mock_app_, policy_app_id())
+      .WillRepeatedly(Return(kPolicyAppId_));
+
   EXPECT_CALL(app_manager_, application_by_policy_id(_))
       .WillOnce(Return(mock_app));
   EXPECT_CALL(app_manager_, connection_handler())
@@ -1694,12 +1699,6 @@ TEST_F(PolicyHandlerTest, DISABLED_OnSnapshotCreated_UrlAdded) {
   EXPECT_CALL(*mock_app_, device()).WillOnce(Return(0));
   EXPECT_CALL(app_manager_, applications()).WillOnce(Return(app_set));
   EXPECT_CALL(mock_message_helper_, SendPolicySnapshotNotification(_, _, _, _));
-  // Check expectations for get app id
-  GetAppIDForSending();
-  // Expectations
-  EXPECT_CALL(app_manager_, application(kAppId1_))
-      .WillRepeatedly(Return(mock_app_));
-  EXPECT_CALL(*mock_app_, policy_app_id()).WillOnce(Return(kPolicyAppId_));
 #endif  // PROPRIETARY_MODE
 
   EXPECT_CALL(*mock_policy_manager_, OnUpdateStarted());
