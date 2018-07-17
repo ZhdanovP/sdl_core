@@ -214,5 +214,24 @@ DEPRECATED void CommandImpl::ReplaceHMIByMobileAppId(
   }
 }
 
+bool CommandImpl::CheckSyntax(const std::string& str,
+                                     bool allow_empty_line) {
+  if (std::string::npos != str.find_first_of("\t\n")) {
+    LOG4CXX_ERROR(logger_, "CheckSyntax failed! :" << str);
+    return false;
+  }
+  if (std::string::npos != str.find("\\n") ||
+      std::string::npos != str.find("\\t")) {
+    LOG4CXX_ERROR(logger_, "CheckSyntax failed! :" << str);
+    return false;
+  }
+  if (!allow_empty_line) {
+    if ((std::string::npos == str.find_first_not_of(' '))) {
+      return false;
+    }
+  }
+  return true;
+}
+
 }  // namespace commands
 }  // namespace application_manager
