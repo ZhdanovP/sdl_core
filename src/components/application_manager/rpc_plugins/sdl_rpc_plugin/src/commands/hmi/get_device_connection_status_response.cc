@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright (c) 2018, Ford Motor Company
  * All rights reserved.
  *
@@ -30,38 +30,34 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "sdl_rpc_plugin/commands/hmi/get_system_info_request.h"
+#include "sdl_rpc_plugin/commands/hmi/get_device_connection_status_response.h"
 
 namespace sdl_rpc_plugin {
 using namespace application_manager;
 
 namespace commands {
 
-GetSystemInfoRequest::GetSystemInfoRequest(
+GetDeviceConnectionStatusResponse::GetDeviceConnectionStatusResponse(
     const application_manager::commands::MessageSharedPtr& message,
     ApplicationManager& application_manager,
     rpc_service::RPCService& rpc_service,
     HMICapabilities& hmi_capabilities,
     policy::PolicyHandlerInterface& policy_handle)
-    : RequestToHMI(message,
-                   application_manager,
-                   rpc_service,
-                   hmi_capabilities,
-                   policy_handle) {}
+    : ResponseToHMI(message,
+                    application_manager,
+                    rpc_service,
+                    hmi_capabilities,
+                    policy_handle) {}
 
-GetSystemInfoRequest::~GetSystemInfoRequest() {}
+GetDeviceConnectionStatusResponse::~GetDeviceConnectionStatusResponse() {}
 
-void GetSystemInfoRequest::Run() {
+void GetDeviceConnectionStatusResponse::Run() {
   LOG4CXX_AUTO_TRACE(logger_);
-  uint32_t correlation_id = RequestToHMI::correlation_id();
-  uint32_t app_id = RequestToHMI::application_id();
-  application_manager_.set_application_id(correlation_id, app_id);
-  SendRequest();
+  (*message_)[strings::params][strings::protocol_type] = hmi_protocol_type_;
+  (*message_)[strings::params][strings::protocol_version] = protocol_version_;
+
+  rpc_service_.SendMessageToHMI(message_);
 }
 
 }  // namespace commands
-
 }  // namespace application_manager
-
-
-

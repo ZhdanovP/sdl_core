@@ -267,6 +267,16 @@ void PolicyManagerImpl::CheckTriggers() {
   }
 }
 
+void PolicyManagerImpl::UpdateConnectionStatus(
+    const std::string& device_id,
+    const policy_table::UserSetting usb_transport_status) {
+  LOG4CXX_AUTO_TRACE(logger_);
+  LOG4CXX_DEBUG(logger_, "Device :" << device_id);
+  if (!cache_->UpdateConnectionStatus(device_id, usb_transport_status)) {
+    LOG4CXX_WARN(logger_, "Can't update connection status.");
+  }
+}
+
 std::string PolicyManagerImpl::GetLockScreenIconUrl() const {
   return cache_->GetLockScreenIconUrl();
 }
@@ -508,6 +518,24 @@ bool PolicyManagerImpl::LoadPT(const std::string& file,
 
   RefreshRetrySequence();
   return true;
+}
+
+bool PolicyManagerImpl::GetDeviceConnectionType(
+    const std::string& device_id, std::string& out_connection_type) const {
+  LOG4CXX_AUTO_TRACE(logger_);
+  return cache_->GetDeviceConnectionType(device_id, out_connection_type);
+}
+
+std::vector<std::string> PolicyManagerImpl::GetDevicesIDs() const {
+  LOG4CXX_AUTO_TRACE(logger_);
+  return cache_->GetDevicesIDs();
+}
+
+rpc::policy_table_interface_base::UserSetting
+PolicyManagerImpl::GetDeviceUSBTransportStatus(
+    const std::string& device_id) const {
+  LOG4CXX_AUTO_TRACE(logger_);
+  return cache_->GetDeviceUSBTransportStatus(device_id);
 }
 
 CheckAppPolicyResults PolicyManagerImpl::CheckPermissionsChanges(
@@ -1042,7 +1070,8 @@ void PolicyManagerImpl::SetDeviceInfo(const std::string& device_id,
                              device_info.os_ver,
                              device_info.carrier,
                              device_info.max_number_rfcom_ports,
-                             device_info.connection_type)) {
+                             device_info.connection_type,
+                             device_info.usb_transport_status)) {
     LOG4CXX_WARN(logger_, "Can't set device data.");
   }
 }

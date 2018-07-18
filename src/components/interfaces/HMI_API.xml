@@ -74,6 +74,12 @@
   <element name="WIFI"/>
 </enum>
 
+<enum name="UserSetting">
+  <description>Enumeration listing user’s settings.</description>
+  <element name="ENABLED" />
+  <element name="DISABLED" />
+</enum>
+
 <enum name="ButtonName">
     <description>Defines the hard (physical) and soft (touchscreen) buttons available from SYNC</description>
     <element name="OK"/>
@@ -2508,6 +2514,9 @@
   <param name="isSDLAllowed" type="Boolean" mandatory="false">
     <description>Sent by SDL in UpdateDeviceList. ’true’ – if device is allowed for PolicyTable Exchange; ‘false’ – if device is NOT allowed for PolicyTable Exchange </description>
   </param>
+  <param name="usbTransportStatus" type="Common.UserSetting" mandatory="false">
+    <description>Used for SDL.OnDeviceConnectionStatus and SDL.GetDeviceConnectionStatus response. Defines whether the named transport is enabled or disabled by the user for the named device. </description>
+  </param> 
 </struct>
 
 <struct name="SoftButton">
@@ -5508,6 +5517,26 @@
 
  <!-- Policies -->
 <interface name="SDL" version="1.2.0" date="2018-09-05">
+<function name="OnDeviceConnectionStatus" messagetype="notification">
+  <description>Sender: HMI->SDL. Purpose: to store the current user’s settings of transport enabling/disabling for device.</description>
+  <param name="device" type="Common.DeviceInfo" mandatory="true">
+    <description>Device information. "transportType" and “transportStatus” are mandatory for this notification.</description>
+  </param>
+</function>
+
+<function name="GetDeviceConnectionStatus" messagetype="request">
+  <description> Sender: HMI->SDL. Purpose: to retrieve the stored user’s settings of transport enabling/disabling for device(s).</description>
+  <param name="device" type="Common.DeviceInfo" mandatory="false" array="true" minsize="1" maxsize="100">
+    <description> Device information. If omitted, all available information will be returned. </description>
+  </param>
+</function>
+
+<function name="GetDeviceConnectionStatus" messagetype="response">
+  <param name="device" type="Common.DeviceInfo" mandatory="true" array="true" minsize="0" maxsize="100">
+    <description> Device information. If empty array is returned – no information is stored on SDL. "transportType" and “transportStatus” are mandatory for this response.</description>
+  </param>
+</function>
+
 <function name="ActivateApp" messagetype="request">
     <param name="appID" type="Integer" mandatory="true">
     </param>

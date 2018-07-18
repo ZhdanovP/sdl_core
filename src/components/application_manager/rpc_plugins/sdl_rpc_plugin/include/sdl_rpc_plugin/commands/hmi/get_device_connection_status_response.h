@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright (c) 2018, Ford Motor Company
  * All rights reserved.
  *
@@ -30,38 +30,49 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "sdl_rpc_plugin/commands/hmi/get_system_info_request.h"
+#ifndef SRC_COMPONENTS_APPLICATION_MANAGER_INCLUDE_APPLICATION_MANAGER_COMMANDS_HMI_GET_DEVICE_CONNECTION_STATUS_RESPONSE_H_
+#define SRC_COMPONENTS_APPLICATION_MANAGER_INCLUDE_APPLICATION_MANAGER_COMMANDS_HMI_GET_DEVICE_CONNECTION_STATUS_RESPONSE_H_
+
+#include "application_manager/commands/response_to_hmi.h"
 
 namespace sdl_rpc_plugin {
-using namespace application_manager;
+namespace app_mngr = application_manager;
 
 namespace commands {
 
-GetSystemInfoRequest::GetSystemInfoRequest(
-    const application_manager::commands::MessageSharedPtr& message,
-    ApplicationManager& application_manager,
-    rpc_service::RPCService& rpc_service,
-    HMICapabilities& hmi_capabilities,
-    policy::PolicyHandlerInterface& policy_handle)
-    : RequestToHMI(message,
-                   application_manager,
-                   rpc_service,
-                   hmi_capabilities,
-                   policy_handle) {}
+/**
+ * @brief GetDeviceConnectionStatusResponse command class
+ * Sends retrieved values from "device_data" section
+ * from PolicyTable as <device> param as response to HMI.
+ **/
+class GetDeviceConnectionStatusResponse : public app_mngr::commands::ResponseToHMI {
+ public:
+  /**
+   * @brief GetDeviceConnectionStatusResponse class constructor
+   * @param message Incoming SmartObject message
+   **/
+  GetDeviceConnectionStatusResponse(
+      const app_mngr::commands::MessageSharedPtr& message,
+      app_mngr::ApplicationManager& application_manager,
+      app_mngr::rpc_service::RPCService& rpc_service,
+      app_mngr::HMICapabilities& hmi_capabilities,
+      policy::PolicyHandlerInterface& policy_handle);
 
-GetSystemInfoRequest::~GetSystemInfoRequest() {}
+  /**
+   * @brief GetDeviceConnectionStatusResponse class destructor
+   **/
+  virtual ~GetDeviceConnectionStatusResponse();
 
-void GetSystemInfoRequest::Run() {
-  LOG4CXX_AUTO_TRACE(logger_);
-  uint32_t correlation_id = RequestToHMI::correlation_id();
-  uint32_t app_id = RequestToHMI::application_id();
-  application_manager_.set_application_id(correlation_id, app_id);
-  SendRequest();
-}
+  /**
+   * @brief Execute command
+   **/
+  void Run() OVERRIDE;
+
+ private:
+  DISALLOW_COPY_AND_ASSIGN(GetDeviceConnectionStatusResponse);
+};
 
 }  // namespace commands
-
 }  // namespace application_manager
 
-
-
+#endif  // SRC_COMPONENTS_APPLICATION_MANAGER_INCLUDE_APPLICATION_MANAGER_COMMANDS_HMI_GET_DEVICE_CONNECTION_STATUS_RESPONSE_H_

@@ -286,6 +286,16 @@ void FilterPolicyTable(policy_table::PolicyTable& pt) {
   }
 }
 
+void PolicyManagerImpl::UpdateConnectionStatus(
+    const std::string& device_id,
+    const policy_table::UserSetting usb_transport_status) {
+  LOG4CXX_AUTO_TRACE(logger_);
+  LOG4CXX_DEBUG(logger_, "Device :" << device_id);
+  if (!cache_->UpdateConnectionStatus(device_id, usb_transport_status)) {
+    LOG4CXX_WARN(logger_, "Can't update connection status.");
+  }
+}
+
 bool PolicyManagerImpl::LoadPT(const std::string& file,
                                const BinaryMessage& pt_content) {
   LOG4CXX_INFO(logger_, "LoadPT of size " << pt_content.size());

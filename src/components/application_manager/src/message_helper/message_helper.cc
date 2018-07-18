@@ -1507,6 +1507,9 @@ bool MessageHelper::CreateDeviceInfo(
   device_info_map[strings::transport_type] =
       app_mngr.GetDeviceTransportType(transport_type);
 
+  device_info_map[strings::usb_transport_status] =
+      policy_handler.GetDeviceUSBTransportStatus(mac_address);
+
   const policy::DeviceConsent device_consent =
       policy_handler.GetUserConsentForDevice(mac_address);
   device_info_map[strings::isSDLAllowed] =

@@ -1064,6 +1064,63 @@ bool PolicyHandler::SendMessageToSDK(const BinaryMessage& pt_string,
   return true;
 }
 
+bool PolicyHandler::GetDeviceConnectionType(
+    const std::string& device_id, std::string& out_connection_type) const {
+  POLICY_LIB_CHECK(false);
+  return policy_manager_->GetDeviceConnectionType(device_id,
+                                                  out_connection_type);
+}
+
+std::vector<std::string> PolicyHandler::GetDevicesIDs() const {
+  POLICY_LIB_CHECK(std::vector<std::string>());
+  return policy_manager_->GetDevicesIDs();
+}
+
+hmi_apis::Common_UserSetting::eType PolicyHandler::GetDeviceUSBTransportStatus(
+    const std::string& device_id) const {
+  POLICY_LIB_CHECK(hmi_apis::Common_UserSetting::INVALID_ENUM);
+  policy_table::UserSetting policy_usb_transport_status =
+      policy_manager_->GetDeviceUSBTransportStatus(device_id);
+  hmi_apis::Common_UserSetting::eType usb_transport_status =
+      hmi_apis::Common_UserSetting::INVALID_ENUM;
+  switch (policy_usb_transport_status) {
+    case policy_table::UserSetting::ENABLED:
+      usb_transport_status = hmi_apis::Common_UserSetting::ENABLED;
+      break;
+    case policy_table::UserSetting::DISABLED:
+      usb_transport_status = hmi_apis::Common_UserSetting::DISABLED;
+      break;
+    default:
+      LOG4CXX_WARN(logger_,
+                   "Invalid value for policy_usb_transport_status: "
+                       << policy_usb_transport_status);
+  }
+  return usb_transport_status;
+}
+
+void PolicyHandler::OnDeviceConnectionStatus(
+    const std::string& device_id,
+    const hmi_apis::Common_UserSetting::eType usb_transport_status) {
+  LOG4CXX_AUTO_TRACE(logger_);
+  POLICY_LIB_CHECK_VOID();
+  policy_table::UserSetting policy_usb_transport_status =
+      policy_table::UserSetting::DISABLED;
+  switch (usb_transport_status) {
+    case hmi_apis::Common_UserSetting::ENABLED:
+      policy_usb_transport_status = policy_table::UserSetting::ENABLED;
+      break;
+    case hmi_apis::Common_UserSetting::DISABLED:
+      policy_usb_transport_status = policy_table::UserSetting::DISABLED;
+      break;
+    default:
+      LOG4CXX_WARN(
+          logger_,
+          "Invalid value for usb_transport_status: " << usb_transport_status);
+  }
+  policy_manager_->UpdateConnectionStatus(device_id,
+                                          policy_usb_transport_status);
+}
+
 bool PolicyHandler::ReceiveMessageFromSDK(const std::string& file,
                                           const BinaryMessage& pt_string) {
   POLICY_LIB_CHECK(false);

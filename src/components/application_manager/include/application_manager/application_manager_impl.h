@@ -116,6 +116,8 @@ enum VRTTSSessionChanging { kVRSessionChanging = 0, kTTSSessionChanging };
 struct CommandParametersPermissions;
 typedef std::map<std::string, hmi_apis::Common_TransportType::eType>
     DeviceTypes;
+typedef std::map<hmi_apis::Common_TransportType::eType, std::string>
+    ConnectionTypes;
 
 CREATE_LOGGERPTR_GLOBAL(logger_, "ApplicationManager")
 typedef std::shared_ptr<timer::Timer> TimerSPtr;
@@ -509,7 +511,7 @@ class ApplicationManagerImpl
    */
   void OnPTUFinished(const bool ptu_result) FINAL;
 
-  /*
+  /**
    * @brief Starts audio pass thru thread
    *
    * @param session_key     Session key of connection for Mobile side
@@ -526,7 +528,7 @@ class ApplicationManagerImpl
                                 int32_t bits_per_sample,
                                 int32_t audio_type) OVERRIDE;
 
-  /*
+  /**
    * @brief Terminates audio pass thru thread
    * @param application_key Id of application for which
    * audio pass thru should be stopped
@@ -535,7 +537,7 @@ class ApplicationManagerImpl
 
   std::string GetDeviceName(connection_handler::DeviceHandle handle);
 
-  /*
+  /**
    * @brief Converts connection string transport type representation
    * to HMI Common_TransportType
    *
@@ -545,6 +547,15 @@ class ApplicationManagerImpl
    */
   hmi_apis::Common_TransportType::eType GetDeviceTransportType(
       const std::string& transport_type);
+
+  /**
+   * @brief Converts HMI Common_TransportType to connection
+   * string transport type representation
+   * @param transport_type HMITransporType value
+   * @return Corresponding String representing connection type
+   */
+  std::string GetDeviceConnectionType(
+      const int32_t connection_id) const OVERRIDE;
 
   void set_hmi_message_handler(hmi_message_handler::HMIMessageHandler* handler);
   void set_connection_handler(connection_handler::ConnectionHandler* handler);

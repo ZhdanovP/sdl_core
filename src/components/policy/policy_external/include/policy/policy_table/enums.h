@@ -62,6 +62,12 @@ bool IsValidEnum(HmiLevel val);
 const char* EnumToJsonString(HmiLevel val);
 bool EnumFromJsonString(const std::string& literal, HmiLevel* result);
 
+enum UserSetting { ENABLED, DISABLED };
+
+bool IsValidEnum(UserSetting val);
+const char* EnumToJsonString(UserSetting val);
+bool EnumFromJsonString(const std::string& literal, UserSetting* result);
+
 enum Parameter {
   P_GPS,
   P_SPEED,

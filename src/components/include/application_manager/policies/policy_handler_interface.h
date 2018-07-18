@@ -38,6 +38,7 @@
 #include <set>
 #include <vector>
 #include <queue>
+#include "interfaces/HMI_API.h"
 #include "interfaces/MOBILE_API.h"
 #include "application_manager/policies/policy_handler_observer.h"
 #include "application_manager/application.h"
@@ -95,6 +96,38 @@ class PolicyHandlerInterface {
       const std::string& priority) const = 0;
   virtual DeviceConsent GetUserConsentForDevice(
       const std::string& device_id) const = 0;
+
+  /**
+   * @brief Gets connection type of the specified device.
+   * @param device_id Generated or obtained id of device
+   * @return True if device is found in policy.
+   */
+  virtual bool GetDeviceConnectionType(
+      const std::string& device_id, std::string& out_connection_type) const = 0;
+
+  /**
+   * @brief Gets IDs for devices in policy table
+   * @return Container with devices IDs
+   */
+  virtual std::vector<std::string> GetDevicesIDs() const = 0;
+
+  /**
+   * @brief Gets USB transport status
+   * @return True if transport is enabled.
+   */
+  virtual hmi_apis::Common_UserSetting::eType GetDeviceUSBTransportStatus(
+      const std::string& device_id) const = 0;
+
+  /**
+   * @brief Updates USB status of mobile device in Policy Table.
+   * @param device_id Generated or obtained id of device
+   * @param usb_transport_status Status of the USB transport
+   * @return bool Success of operation
+   */
+  virtual void OnDeviceConnectionStatus(
+      const std::string& device_id,
+      const hmi_apis::Common_UserSetting::eType usb_transport_status) = 0;
+
   virtual bool GetDefaultHmi(const std::string& policy_app_id,
                              std::string* default_hmi) const = 0;
   virtual bool GetInitialAppData(const std::string& application_id,
