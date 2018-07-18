@@ -152,6 +152,9 @@
 #include "sdl_rpc_plugin/commands/hmi/sdl_activate_app_response.h"
 #include "sdl_rpc_plugin/commands/hmi/on_app_permission_changed_notification.h"
 #include "sdl_rpc_plugin/commands/hmi/on_event_changed_notification.h"
+#include "sdl_rpc_plugin/commands/hmi/on_device_connection_status_notification.h"
+#include "sdl_rpc_plugin/commands/hmi/get_device_connection_status_request.h"
+#include "sdl_rpc_plugin/commands/hmi/get_device_connection_status_response.h"
 
 #ifdef EXTERNAL_PROPRIETARY_MODE
 #include "sdl_rpc_plugin/commands/hmi/decrypt_certificate_request.h"
@@ -546,6 +549,9 @@ CommandCreator& HMICommandFactory::get_creator_factory(
     }
     case hmi_apis::FunctionID::BasicCommunication_OnAppActivated: {
       return factory.GetCreator<commands::OnAppActivatedNotification>();
+    }
+    case hmi_apis::FunctionID::SDL_GetDeviceConnectionStatus: {
+      return factory.GetCreator<commands::OnDeviceConnectionStatusNotification>();
     }
     case hmi_apis::FunctionID::BasicCommunication_OnAwakeSDL: {
       return factory.GetCreator<commands::OnAwakeSDLNotification>();

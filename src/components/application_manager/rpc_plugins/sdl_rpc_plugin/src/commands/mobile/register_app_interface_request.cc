@@ -1103,39 +1103,37 @@ mobile_apis::Result::eType RegisterAppInterfaceRequest::CheckWithPolicyData() {
 
 void RegisterAppInterfaceRequest::FillDeviceInfo(
     policy::DeviceInfo* device_info) {
-  const std::string hardware = "hardware";
-  const std::string firmware_rev = "firmwareRev";
-  const std::string os = "os";
-  const std::string os_ver = "osVersion";
-  const std::string carrier = "carrier";
-  const std::string max_number_rfcom_ports = "maxNumberRFCOMMPorts";
-
   const smart_objects::SmartObject& msg_params =
       (*message_)[strings::msg_params];
 
   const smart_objects::SmartObject& device_info_so =
       msg_params[strings::device_info];
 
-  if (device_info_so.keyExists(hardware)) {
+  if (device_info_so.keyExists(strings::hardware)) {
     device_info->hardware =
-        msg_params[strings::device_info][hardware].asString();
+        msg_params[strings::device_info][strings::hardware].asString();
   }
-  if (device_info_so.keyExists(firmware_rev)) {
+  if (device_info_so.keyExists(strings::firmware_rev)) {
     device_info->firmware_rev =
-        msg_params[strings::device_info][firmware_rev].asString();
+        msg_params[strings::device_info][strings::firmware_rev].asString();
   }
-  if (device_info_so.keyExists(os)) {
-    device_info->os = device_info_so[os].asString();
+  if (device_info_so.keyExists(strings::os)) {
+    device_info->os = device_info_so[strings::os].asString();
   }
-  if (device_info_so.keyExists(os_ver)) {
-    device_info->os_ver = device_info_so[os_ver].asString();
+  if (device_info_so.keyExists(strings::os_version)) {
+    device_info->os_ver = device_info_so[strings::os_version].asString();
   }
-  if (device_info_so.keyExists(carrier)) {
-    device_info->carrier = device_info_so[carrier].asString();
+  if (device_info_so.keyExists(strings::carrier)) {
+    device_info->carrier = device_info_so[strings::carrier].asString();
   }
-  if (device_info_so.keyExists(max_number_rfcom_ports)) {
+  if (device_info_so.keyExists(strings::max_number_rfcom_ports)) {
     device_info->max_number_rfcom_ports =
-        device_info_so[max_number_rfcom_ports].asInt();
+        device_info_so[strings::max_number_rfcom_ports].asInt();
+  }
+  if (device_info_so.keyExists(strings::usb_transport_status)) {
+    device_info->usb_transport_status =
+        static_cast<rpc::policy_table_interface_base::UserSetting>(
+            device_info_so[strings::usb_transport_status].asInt());
   }
 }
 

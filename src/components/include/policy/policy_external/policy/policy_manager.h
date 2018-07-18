@@ -269,6 +269,27 @@ class PolicyManager : public usage_statistics::StatisticsManager {
                          const std::string& connection_type) = 0;
 
   /**
+   * @brief Gets connection type of the specified device.
+   * @param device_id Generated or obtained id of device
+   * @return True if device is found in policy.
+   */
+  virtual bool GetDeviceConnectionType(
+      const std::string& device_id, std::string& out_connection_type) const = 0;
+
+  /**
+   * @brief Gets IDs for devices in policy table
+   * @return Container with devices IDs
+   */
+  virtual std::vector<std::string> GetDevicesIDs() const = 0;
+
+  /**
+   * @brief Gets USB transport status
+   * @return True if transport is enabled.
+   */
+  virtual rpc::policy_table_interface_base::UserSetting
+  GetDeviceUSBTransportStatus(const std::string& device_id) const = 0;
+
+  /**
    * @brief Stores device parameters received during application registration
    * to policy table
    * @param device_id Device mac address
@@ -287,6 +308,16 @@ class PolicyManager : public usage_statistics::StatisticsManager {
    */
   virtual void SetUserConsentForApp(const PermissionConsent& permissions,
                                     const NotificationMode mode) = 0;
+
+  /**
+   * @brief Update Connection Status
+   * @param device_id std::string
+   * @param usb_transport_status policy_table_interface_base::UserSetting
+   */
+  virtual void UpdateConnectionStatus(
+      const std::string& device_id,
+      const rpc::policy_table_interface_base::UserSetting
+          usb_transport_status) = 0;
 
   /**
    * @brief Get default HMI level for application

@@ -641,7 +641,7 @@ class ApplicationManager {
   virtual protocol_handler::MajorProtocolVersion SupportedSDLVersion()
       const = 0;
 
-  /*
+  /**
    * @brief Converts connection string transport type representation
    * to HMI Common_TransportType
    *
@@ -651,6 +651,15 @@ class ApplicationManager {
    */
   virtual hmi_apis::Common_TransportType::eType GetDeviceTransportType(
       const std::string& transport_type) = 0;
+
+  /**
+   * @brief Converts HMI Common_TransportType to connection
+   * string transport type representation
+   * @param transport_type HMITransporType value
+   * @return Corresponding String representing connection type
+   */
+  virtual std::string GetDeviceConnectionType(
+      const int32_t connection_id) const = 0;
 
   /**
    * @brief method adds application

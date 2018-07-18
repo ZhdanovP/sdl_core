@@ -181,14 +181,16 @@ bool SQLPTExtRepresentation::GetDeviceGroupsFromPolicies(
   return true;
 }
 
-bool SQLPTExtRepresentation::SetDeviceData(const std::string& device_id,
-                                           const std::string& hardware,
-                                           const std::string& firmware,
-                                           const std::string& os,
-                                           const std::string& os_version,
-                                           const std::string& carrier,
-                                           const uint32_t number_of_ports,
-                                           const std::string& connection_type) {
+bool SQLPTExtRepresentation::SetDeviceData(
+    const std::string& device_id,
+    const std::string& hardware,
+    const std::string& firmware,
+    const std::string& os,
+    const std::string& os_version,
+    const std::string& carrier,
+    const uint32_t number_of_ports,
+    const std::string& connection_type,
+    const policy_table::UserSetting usb_transport_status) {
   LOG4CXX_AUTO_TRACE(logger_);
   utils::dbms::SQLQuery count_query(db());
   if (!count_query.Prepare(sql_pt_ext::kCountDevice)) {
@@ -221,6 +223,8 @@ bool SQLPTExtRepresentation::SetDeviceData(const std::string& device_id,
     update_query.Bind(5, static_cast<int>(number_of_ports));
     update_query.Bind(6, device_id);
     update_query.Bind(7, connection_type);
+    update_query.Bind(
+        8, std::string(policy_table::EnumToJsonString(usb_transport_status)));
 
     if (!update_query.Exec() || !update_query.Reset()) {
       LOG4CXX_WARN(logger_, "Incorrect update for device.");
@@ -245,6 +249,8 @@ bool SQLPTExtRepresentation::SetDeviceData(const std::string& device_id,
   insert_query.Bind(5, carrier);
   insert_query.Bind(6, static_cast<int>(number_of_ports));
   insert_query.Bind(7, connection_type);
+  insert_query.Bind(
+      8, std::string(policy_table::EnumToJsonString(usb_transport_status)));
 
   if (!insert_query.Exec() || !insert_query.Reset()) {
     LOG4CXX_WARN(logger_, "Incorrect insert to device.");
@@ -965,6 +971,9 @@ void SQLPTExtRepresentation::GatherDeviceData(
     *specific_device->os_version = query.GetString(4);
     *specific_device->carrier = query.GetString(5);
     *specific_device->max_number_rfcom_ports = query.GetInteger(6);
+    policy_table::UserSetting input;
+    policy_table::EnumFromJsonString(query.GetString(8), &input);
+    *specific_device->usb_transport_status = input;
 
     // TODO(IKozyrenko): Check logic if optional container is missing
     GatherConsentGroup(query.GetString(0),
@@ -1097,6 +1106,9 @@ bool SQLPTExtRepresentation::SaveDeviceData(
     query.Bind(5, *(it->second.carrier));
     query.Bind(6, *(it->second.max_number_rfcom_ports));
     query.Bind(7, *(it->second.connection_type));
+    query.Bind(8,
+               std::string(policy_table::EnumToJsonString(
+                   *(it->second.usb_transport_status))));
 
     if (!query.Exec() || !query.Reset()) {
       LOG4CXX_WARN(logger_, "Incorrect insert into device data.");

@@ -100,8 +100,16 @@ DeviceTypes devicesType = {
                    hmi_apis::Common_TransportType::USB_IOS),
     std::make_pair(std::string("CARPLAY_WIRELESS_IOS"),
                    hmi_apis::Common_TransportType::WIFI)};
-}
 
+ConnectionTypes connectionType = {
+    std::make_pair(hmi_apis::Common_TransportType::USB_AOA,
+                   std::string("USB_AOA")),
+    std::make_pair(hmi_apis::Common_TransportType::USB_IOS,
+                   std::string("USB_IOS")),
+    std::make_pair(hmi_apis::Common_TransportType::BLUETOOTH,
+                   std::string("BLUETOOTH")),
+    std::make_pair(hmi_apis::Common_TransportType::WIFI, std::string("WIFI"))};
+}
 /**
  * @brief device_id_comparator is predicate to compare application device id
  * @param device_id Device id to compare with
@@ -366,6 +374,20 @@ void ApplicationManagerImpl::IviInfoUpdated(
     default:
       break;
   }
+}
+
+std::string ApplicationManagerImpl::GetDeviceConnectionType(
+    const int32_t connection_id) const {
+  const hmi_apis::Common_TransportType::eType index =
+      static_cast<hmi_apis::Common_TransportType::eType>(connection_id);
+
+  ConnectionTypes::const_iterator it = connectionType.find(index);
+  if (it != connectionType.end()) {
+    return it->second;
+  }
+
+  LOG4CXX_ERROR(logger_, "Unknown connection id " << connection_id);
+  return std::string();
 }
 
 void ApplicationManagerImpl::OnApplicationRegistered(ApplicationSharedPtr app) {

@@ -401,6 +401,31 @@ bool CacheManager::GetDefaultHMI(const std::string& app_id,
   return result;
 }
 
+bool CacheManager::UpdateConnectionStatus(
+    const std::string& device_id,
+    const policy_table::UserSetting usb_transport_status) {
+  LOG4CXX_AUTO_TRACE(logger_);
+
+  sync_primitives::AutoLock auto_lock(cache_lock_);
+  CACHE_MANAGER_CHECK(false);
+
+  policy_table::DeviceData& device_data = *pt_->policy_table.device_data;
+  policy_table::DeviceData::iterator device_data_iter =
+      device_data.find(device_id);
+
+  if (device_data.end() == device_data_iter) {
+    LOG4CXX_ERROR(logger_, "Unable to find mobile device: " << device_id);
+    return false;
+  }
+
+  policy_table::DeviceParams& params = device_data_iter->second;
+
+  *params.usb_transport_status = usb_transport_status;
+
+  Backup();
+  return true;
+}
+
 bool CacheManager::ResetUserConsent() {
   CACHE_MANAGER_CHECK(false);
   sync_primitives::AutoLock lock(cache_lock_);
@@ -988,14 +1013,16 @@ bool CacheManager::AddDevice(const std::string& device_id,
   return true;
 }
 
-bool CacheManager::SetDeviceData(const std::string& device_id,
-                                 const std::string& hardware,
-                                 const std::string& firmware,
-                                 const std::string& os,
-                                 const std::string& os_version,
-                                 const std::string& carrier,
-                                 const uint32_t number_of_ports,
-                                 const std::string& connection_type) {
+bool CacheManager::SetDeviceData(
+    const std::string& device_id,
+    const std::string& hardware,
+    const std::string& firmware,
+    const std::string& os,
+    const std::string& os_version,
+    const std::string& carrier,
+    const uint32_t number_of_ports,
+    const std::string& connection_type,
+    const policy_table::UserSetting usb_transport_status) {
   LOG4CXX_AUTO_TRACE(logger_);
 
   sync_primitives::AutoLock auto_lock(cache_lock_);
@@ -1016,6 +1043,7 @@ bool CacheManager::SetDeviceData(const std::string& device_id,
   *params.carrier = carrier;
   *params.max_number_rfcom_ports = number_of_ports;
   *params.connection_type = connection_type;
+  *params.usb_transport_status = usb_transport_status;
 
   Backup();
   return true;
@@ -1425,6 +1453,56 @@ std::vector<UserFriendlyMessage> CacheManager::GetUserFriendlyMsg(
     result.push_back(msg);
   }
   return result;
+}
+
+bool CacheManager::GetDeviceConnectionType(
+    const std::string& device_id, std::string& out_connection_type) const {
+  LOG4CXX_AUTO_TRACE(logger_);
+  CACHE_MANAGER_CHECK(false);
+
+  policy_table::DeviceData& device_data = *pt_->policy_table.device_data;
+  policy_table::DeviceData::const_iterator device_data_iter =
+      device_data.find(device_id);
+  if (device_data.end() == device_data_iter) {
+    LOG4CXX_ERROR(logger_,
+                  "Device with " << device_id << " was not found in PT");
+    out_connection_type.clear();
+    return false;
+  }
+
+  const policy_table::DeviceParams& params = device_data_iter->second;
+  out_connection_type = *(params.connection_type);
+  return true;
+}
+
+std::vector<std::string> CacheManager::GetDevicesIDs() const {
+  std::vector<std::string> result;
+  CACHE_MANAGER_CHECK(result);
+
+  for (auto iter : *pt_->policy_table.device_data) {
+    result.push_back(iter.first);
+  }
+  return result;
+}
+
+policy_table::UserSetting CacheManager::GetDeviceUSBTransportStatus(
+    const std::string& device_id) const {
+  LOG4CXX_AUTO_TRACE(logger_);
+  CACHE_MANAGER_CHECK(policy_table::UserSetting::DISABLED);
+
+  policy_table::DeviceData& device_data = *pt_->policy_table.device_data;
+  policy_table::DeviceData::const_iterator device_data_iter =
+      device_data.find(device_id);
+  if (device_data.end() == device_data_iter) {
+    LOG4CXX_ERROR(logger_,
+                  "Device with " << device_id << " was not found in PT");
+    return policy_table::UserSetting::DISABLED;
+  }
+
+  const policy_table::DeviceParams& params = device_data_iter->second;
+  const policy_table::UserSetting usb_transport_status =
+      *(params.usb_transport_status);
+  return usb_transport_status;
 }
 
 void CacheManager::GetUpdateUrls(const uint32_t service_type,
