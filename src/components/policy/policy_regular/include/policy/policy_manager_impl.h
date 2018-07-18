@@ -93,6 +93,17 @@ class PolicyManagerImpl : public PolicyManager {
               const BinaryMessage& pt_content) OVERRIDE;
 
   /**
+   * @brief Updates USB status of mobile device in Policy Table.
+   * @param device_id Generated or obtained id of device
+   * @param usb_transport_status Status of the USB transport
+   * @return True on success of the operation
+   */
+  void UpdateConnectionStatus(
+      const std::string& device_id,
+      const rpc::policy_table_interface_base::UserSetting usb_transport_status)
+      OVERRIDE;
+
+  /**
    * @brief Resets Policy Table
    * @param file_name Path to preloaded PT file
    * @return true if successfully
@@ -115,6 +126,28 @@ class PolicyManagerImpl : public PolicyManager {
    *obtained.
    */
   std::string GetLockScreenIconUrl() const OVERRIDE;
+
+  /**
+     * @brief Gets connection type of the specified device.
+     * @param device_id Generated or obtained id of device
+     * @return True if device is found in policy.
+     */
+  bool GetDeviceConnectionType(const std::string& device_id,
+                               std::string& out_connection_type) const OVERRIDE;
+
+  /**
+   * @brief Gets IDs for devices in policy table
+   * @return Container with devices IDs
+   */
+  std::vector<std::string> GetDevicesIDs() const OVERRIDE;
+
+  /**
+   * @brief Gets USB transport status
+   * @param device_id Generated or obtained id of device
+   * @return True if transport is enabled.
+   */
+  rpc::policy_table_interface_base::UserSetting GetDeviceUSBTransportStatus(
+      const std::string& device_id) const OVERRIDE;
 
   /**
    * @brief PTU is needed, for this PTS has to be formed and sent.

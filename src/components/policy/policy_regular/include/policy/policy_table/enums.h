@@ -52,6 +52,12 @@ bool IsValidEnum(Priority val);
 const char* EnumToJsonString(Priority val);
 bool EnumFromJsonString(const std::string& literal, Priority* result);
 
+enum UserSetting { ENABLED, DISABLED };
+
+bool IsValidEnum(UserSetting val);
+const char* EnumToJsonString(UserSetting val);
+bool EnumFromJsonString(const std::string& literal, UserSetting* result);
+
 enum HmiLevel {
   HL_BACKGROUND,
   HL_FULL,

@@ -283,6 +283,14 @@ void FilterPolicyTable(policy_table::PolicyTable& pt) {
     for (auto& func : rpcs) {
       FilterInvalidRPCParameters(func.second);
     }
+
+void PolicyManagerImpl::UpdateConnectionStatus(
+    const std::string& device_id,
+    const policy_table::UserSetting usb_transport_status) {
+  LOG4CXX_AUTO_TRACE(logger_);
+  LOG4CXX_DEBUG(logger_, "Device :" << device_id);
+  if (!cache_->UpdateConnectionStatus(device_id, usb_transport_status)) {
+    LOG4CXX_WARN(logger_, "Can't update connection status.");
   }
 }
 
@@ -698,6 +706,13 @@ void PolicyManagerImpl::AddDevice(const std::string& device_id,
   }
 }
 
+rpc::policy_table_interface_base::UserSetting
+PolicyManagerImpl::GetDeviceUSBTransportStatus(
+    const std::string& device_id) const {
+  LOG4CXX_AUTO_TRACE(logger_);
+  return cache_->GetDeviceUSBTransportStatus(device_id);
+}
+
 void PolicyManagerImpl::SetDeviceInfo(const std::string& device_id,
                                       const DeviceInfo& device_info) {
   LOG4CXX_AUTO_TRACE(logger_);
@@ -794,6 +809,17 @@ bool PolicyManagerImpl::GetDefaultHmi(const std::string& policy_app_id,
                                  ? kPreDataConsentId
                                  : policy_app_id;
   return cache_->GetDefaultHMI(app_id, *default_hmi);
+}
+
+bool PolicyManagerImpl::GetDeviceConnectionType(
+    const std::string& device_id, std::string& out_connection_type) const {
+  LOG4CXX_AUTO_TRACE(logger_);
+  return cache_->GetDeviceConnectionType(device_id, out_connection_type);
+}
+
+std::vector<std::string> PolicyManagerImpl::GetDevicesIDs() const {
+  LOG4CXX_AUTO_TRACE(logger_);
+  return cache_->GetDevicesIDs();
 }
 
 bool PolicyManagerImpl::GetPriority(const std::string& policy_app_id,

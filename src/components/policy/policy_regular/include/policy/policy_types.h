@@ -42,6 +42,7 @@
 #include <memory>
 
 #include "utils/helpers.h"
+#include "policy/policy_table/enums.h"
 #include "transport_manager/common.h"
 
 namespace policy {
@@ -210,7 +211,10 @@ enum DeviceConsent {
  * registration and should be stored in policy table
  */
 struct DeviceInfo {
-  DeviceInfo() : max_number_rfcom_ports(0) {}
+  typedef rpc::policy_table_interface_base::UserSetting UserSetting;
+  DeviceInfo()
+      : max_number_rfcom_ports(0)
+      , usb_transport_status(UserSetting::DISABLED) {}
 
   std::string hardware;
   std::string firmware_rev;
@@ -219,6 +223,7 @@ struct DeviceInfo {
   std::string carrier;
   uint32_t max_number_rfcom_ports;
   std::string connection_type;
+  UserSetting usb_transport_status;
 
   void AdoptDeviceType(const std::string& deviceType) {
     connection_type = "USB_serial_number";
@@ -268,6 +273,7 @@ struct AppPermissions {
       , appRevoked(false)
       , appPermissionsConsentNeeded(false)
       , appUnauthorized(false)
+      , isSDLAllowed(false)
       , requestTypeChanged(false)
       , requestSubTypeChanged(false) {}
 
