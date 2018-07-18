@@ -88,6 +88,17 @@ class MockPolicyManager : public PolicyManager {
   MOCK_METHOD0(OnUpdateStarted, void());
   MOCK_CONST_METHOD1(GetUserConsentForDevice,
                      DeviceConsent(const std::string& device_id));
+  MOCK_CONST_METHOD2(GetDeviceConnectionType,
+                     bool(const std::string& device_id,
+                          std::string& out_connection_type));
+  MOCK_METHOD2(UpdateConnectionStatus,
+               void(const std::string& device_id,
+                    const rpc::policy_table_interface_base::UserSetting
+                        usb_transport_status));
+  MOCK_CONST_METHOD0(GetDevicesIDs, std::vector<std::string>());
+  MOCK_CONST_METHOD1(GetDeviceUSBTransportStatus,
+                     rpc::policy_table_interface_base::UserSetting(
+                         const std::string& device_id));
   MOCK_METHOD3(
       GetUserConsentForApp,
       void(const std::string& device_id,

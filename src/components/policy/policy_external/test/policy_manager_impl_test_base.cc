@@ -440,14 +440,16 @@ void PolicyManagerImplTest2::
   CreateLocalPT("json/sdl_preloaded_pt_send_location.json");
   policy_manager_->AddDevice(device_id_1_, "Bluetooth");
   policy::CacheManagerInterfaceSPtr cache = policy_manager_->GetCache();
-  ASSERT_TRUE(cache->SetDeviceData(device_id_1_,
-                                   "hardware IPX",
-                                   "v.8.0.1",
-                                   "Android",
-                                   "4.4.2",
-                                   "Life",
-                                   2,
-                                   "Bluetooth"));
+  ASSERT_TRUE(cache->SetDeviceData(
+      device_id_1_,
+      "hardware IPX",
+      "v.8.0.1",
+      "Android",
+      "4.4.2",
+      "Life",
+      2,
+      "Bluetooth",
+      rpc::policy_table_interface_base::UserSetting::DISABLED));
 
   // Add app from consented device. App will be assigned with default policies
   policy_manager_->AddApplication(application_id_,
@@ -566,14 +568,16 @@ void PolicyManagerImplTest2::AddSetDeviceData() {
   CreateLocalPT("json/sdl_preloaded_pt_send_location.json");
   policy_manager_->AddDevice(device_id_1_, "Bluetooth");
   ASSERT_TRUE((policy_manager_->GetCache())
-                  ->SetDeviceData(device_id_1_,
-                                  "hardware IPX",
-                                  "v.8.0.1",
-                                  "Android",
-                                  "4.4.2",
-                                  "Life",
-                                  2,
-                                  "Bluetooth"));
+                  ->SetDeviceData(
+                      device_id_1_,
+                      "hardware IPX",
+                      "v.8.0.1",
+                      "Android",
+                      "4.4.2",
+                      "Life",
+                      2,
+                      "Bluetooth",
+                      rpc::policy_table_interface_base::UserSetting::DISABLED));
 
   // Add app from consented device. App will be assigned with default policies
   policy_manager_->AddApplication(application_id_,

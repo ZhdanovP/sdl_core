@@ -91,6 +91,8 @@ class MockApplicationManager : public application_manager::ApplicationManager {
   MOCK_METHOD1(SetPluginManager,
                void(std::unique_ptr<RPCPluginManager>& plugin_manager));
 
+  MOCK_CONST_METHOD1(GetDeviceConnectionType, std::string(int32_t));
+
   MOCK_CONST_METHOD1(
       application_by_hmi_app,
       application_manager::ApplicationSharedPtr(uint32_t hmi_app_id));
