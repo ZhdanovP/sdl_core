@@ -69,6 +69,16 @@ class MockCacheManagerInterface : public CacheManagerInterface {
                    const std::vector<std::string>& msg_codes,
                    const std::string& language));
 
+  MOCK_CONST_METHOD2(GetDeviceConnectionType,
+                     bool(const std::string& device_id,
+                          std::string& out_connection_type));
+  MOCK_CONST_METHOD0(GetDevicesIDs, std::vector<std::string>());
+  MOCK_CONST_METHOD1(GetDeviceUSBTransportStatus,
+                     policy_table::UserSetting(const std::string& device_id));
+  MOCK_METHOD2(UpdateConnectionStatus,
+               bool(const std::string& device_id,
+                    const policy_table::UserSetting usb_transport_status));
+
   MOCK_METHOD1(
       GetNotificationsNumber,
       policy_table::NumberOfNotificationsType(const std::string& priority));
@@ -121,7 +131,7 @@ class MockCacheManagerInterface : public CacheManagerInterface {
   MOCK_METHOD2(AddDevice,
                bool(const std::string& device_id,
                     const std::string& connection_type));
-  MOCK_METHOD8(SetDeviceData,
+  MOCK_METHOD9(SetDeviceData,
                bool(const std::string& device_id,
                     const std::string& hardware,
                     const std::string& firmware,
@@ -129,7 +139,8 @@ class MockCacheManagerInterface : public CacheManagerInterface {
                     const std::string& os_version,
                     const std::string& carrier,
                     const uint32_t number_of_ports,
-                    const std::string& connection_type));
+                    const std::string& connection_type,
+                    const policy_table::UserSetting usb_transport_status));
   MOCK_METHOD3(SetUserPermissionsForDevice,
                bool(const std::string& device_id,
                     const StringArray& consented_groups,
