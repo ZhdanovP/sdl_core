@@ -236,14 +236,16 @@ TEST_F(PolicyManagerImplTest2,
       (policy_manager_->GetCache())->AddDevice(device_id_2_, "Bluetooth"));
 
   ASSERT_TRUE((policy_manager_->GetCache())
-                  ->SetDeviceData(device_id_2_,
-                                  "hardware IPX",
-                                  "v.8.0.1",
-                                  "Android",
-                                  "4.4.2",
-                                  "Life",
-                                  2,
-                                  "Bluetooth"));
+                  ->SetDeviceData(
+                      device_id_2_,
+                      "hardware IPX",
+                      "v.8.0.1",
+                      "Android",
+                      "4.4.2",
+                      "Life",
+                      2,
+                      "Bluetooth",
+                      rpc::policy_table_interface_base::UserSetting::DISABLED));
 
   policy_manager_->SetUserConsentForDevice(device_id_2_, true);
   ::policy::DeviceConsent consent =
@@ -260,14 +262,16 @@ TEST_F(
   ASSERT_TRUE(
       (policy_manager_->GetCache())->AddDevice(device_id_2_, "Bluetooth"));
   ASSERT_TRUE((policy_manager_->GetCache())
-                  ->SetDeviceData(device_id_2_,
-                                  "hardware IPX",
-                                  "v.8.0.1",
-                                  "Android",
-                                  "4.4.2",
-                                  "Life",
-                                  2,
-                                  "Bluetooth"));
+                  ->SetDeviceData(
+                      device_id_2_,
+                      "hardware IPX",
+                      "v.8.0.1",
+                      "Android",
+                      "4.4.2",
+                      "Life",
+                      2,
+                      "Bluetooth",
+                      rpc::policy_table_interface_base::UserSetting::DISABLED));
 
   policy_manager_->SetUserConsentForDevice(device_id_2_, false);
   ::policy::DeviceConsent consent =
@@ -283,14 +287,16 @@ TEST_F(PolicyManagerImplTest2,
   ASSERT_TRUE(
       (policy_manager_->GetCache())->AddDevice(device_id_2_, "Bluetooth"));
   ASSERT_TRUE((policy_manager_->GetCache())
-                  ->SetDeviceData(device_id_2_,
-                                  "hardware IPX",
-                                  "v.8.0.1",
-                                  "Android",
-                                  "4.4.2",
-                                  "Life",
-                                  2,
-                                  "Bluetooth"));
+                  ->SetDeviceData(
+                      device_id_2_,
+                      "hardware IPX",
+                      "v.8.0.1",
+                      "Android",
+                      "4.4.2",
+                      "Life",
+                      2,
+                      "Bluetooth",
+                      rpc::policy_table_interface_base::UserSetting::DISABLED));
 
   policy_manager_->SetUserConsentForDevice(device_id_2_, false);
   ::policy::DeviceConsent consent =
@@ -320,14 +326,16 @@ TEST_F(PolicyManagerImplTest2,
   ASSERT_TRUE(
       (policy_manager_->GetCache())->AddDevice(device_id_2_, "Bluetooth"));
   ASSERT_TRUE((policy_manager_->GetCache())
-                  ->SetDeviceData(device_id_2_,
-                                  "hardware IPX",
-                                  "v.8.0.1",
-                                  "Android",
-                                  "4.4.2",
-                                  "Life",
-                                  2,
-                                  "Bluetooth"));
+                  ->SetDeviceData(
+                      device_id_2_,
+                      "hardware IPX",
+                      "v.8.0.1",
+                      "Android",
+                      "4.4.2",
+                      "Life",
+                      2,
+                      "Bluetooth",
+                      rpc::policy_table_interface_base::UserSetting::DISABLED));
   policy_manager_->SetUserConsentForDevice(device_id_2_, true);
   ::policy::DeviceConsent consent =
       policy_manager_->GetUserConsentForDevice(device_id_2_);
@@ -357,14 +365,16 @@ TEST_F(PolicyManagerImplTest2,
   ASSERT_TRUE(
       (policy_manager_->GetCache())->AddDevice(device_id_2_, "Bluetooth"));
   ASSERT_TRUE((policy_manager_->GetCache())
-                  ->SetDeviceData(device_id_2_,
-                                  "hardware IPX",
-                                  "v.8.0.1",
-                                  "Android",
-                                  "4.4.2",
-                                  "Life",
-                                  2,
-                                  "Bluetooth"));
+                  ->SetDeviceData(
+                      device_id_2_,
+                      "hardware IPX",
+                      "v.8.0.1",
+                      "Android",
+                      "4.4.2",
+                      "Life",
+                      2,
+                      "Bluetooth",
+                      rpc::policy_table_interface_base::UserSetting::DISABLED));
   policy_manager_->SetUserConsentForDevice(device_id_2_, true);
   ::policy::DeviceConsent consent =
       policy_manager_->GetUserConsentForDevice(device_id_2_);
@@ -551,14 +561,16 @@ TEST_F(PolicyManagerImplTest2,
   policy_manager_->AddApplication(app_id_2_,
                                   HmiTypes(policy_table::AHT_DEFAULT));
   ASSERT_TRUE((policy_manager_->GetCache())
-                  ->SetDeviceData(device_id_2_,
-                                  "hardware IPX",
-                                  "v.8.0.1",
-                                  "Android",
-                                  "4.4.2",
-                                  "Life",
-                                  2,
-                                  "Bluetooth"));
+                  ->SetDeviceData(
+                      device_id_2_,
+                      "hardware IPX",
+                      "v.8.0.1",
+                      "Android",
+                      "4.4.2",
+                      "Life",
+                      2,
+                      "Bluetooth",
+                      rpc::policy_table_interface_base::UserSetting::DISABLED));
   policy_manager_->SetUserConsentForDevice(device_id_2_, true);
   ::policy::DeviceConsent consent =
       policy_manager_->GetUserConsentForDevice(device_id_2_);
@@ -593,14 +605,16 @@ TEST_F(PolicyManagerImplTest2,
   policy_manager_->AddApplication(app_id_2_,
                                   HmiTypes(policy_table::AHT_DEFAULT));
   ASSERT_TRUE((policy_manager_->GetCache())
-                  ->SetDeviceData(device_id_2_,
-                                  "hardware IPX",
-                                  "v.8.0.1",
-                                  "Android",
-                                  "4.4.2",
-                                  "Life",
-                                  2,
-                                  "Bluetooth"));
+                  ->SetDeviceData(
+                      device_id_2_,
+                      "hardware IPX",
+                      "v.8.0.1",
+                      "Android",
+                      "4.4.2",
+                      "Life",
+                      2,
+                      "Bluetooth",
+                      rpc::policy_table_interface_base::UserSetting::DISABLED));
   policy_manager_->SetUserConsentForDevice(device_id_2_, true);
   ::policy::DeviceConsent consent =
       policy_manager_->GetUserConsentForDevice(device_id_2_);
@@ -645,14 +659,16 @@ TEST_F(
   ASSERT_TRUE(
       (policy_manager_->GetCache())->AddDevice(device_id_2_, "Bluetooth"));
   ASSERT_TRUE((policy_manager_->GetCache())
-                  ->SetDeviceData(device_id_2_,
-                                  "hardware IPX",
-                                  "v.8.0.1",
-                                  "Android",
-                                  "4.4.2",
-                                  "Life",
-                                  2,
-                                  "Bluetooth"));
+                  ->SetDeviceData(
+                      device_id_2_,
+                      "hardware IPX",
+                      "v.8.0.1",
+                      "Android",
+                      "4.4.2",
+                      "Life",
+                      2,
+                      "Bluetooth",
+                      rpc::policy_table_interface_base::UserSetting::DISABLED));
   policy_manager_->SetUserConsentForDevice(device_id_2_, true);
   ::policy::DeviceConsent consent =
       policy_manager_->GetUserConsentForDevice(device_id_2_);

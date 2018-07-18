@@ -89,6 +89,17 @@ class MockPolicyHandlerInterface : public policy::PolicyHandlerInterface {
   MOCK_CONST_METHOD2(GetDefaultHmi,
                      bool(const std::string& policy_app_id,
                           std::string* default_hmi));
+  MOCK_CONST_METHOD2(GetDeviceConnectionType,
+                     bool(const std::string& device_id,
+                          std::string& out_connection_type));
+  MOCK_CONST_METHOD0(GetDevicesIDs, std::vector<std::string>());
+  MOCK_CONST_METHOD1(
+      GetDeviceUSBTransportStatus,
+      hmi_apis::Common_UserSetting::eType(const std::string& device_id));
+  MOCK_METHOD2(
+      OnDeviceConnectionStatus,
+      void(const std::string& device_id,
+           const hmi_apis::Common_UserSetting::eType usb_transport_status));
 
   MOCK_METHOD3(GetInitialAppData,
                bool(const std::string& application_id,
