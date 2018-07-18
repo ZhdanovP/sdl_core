@@ -282,6 +282,17 @@ class PolicyManager : public usage_statistics::StatisticsManager {
   virtual void SetUserConsentForApp(const PermissionConsent& permissions) = 0;
 
   /**
+   * @brief Updates USB status of mobile device in Policy Table.
+   * @param device_id Generated or obtained id of device
+   * @param usb_transport_status Status of the USB transport
+   * @return True on success of the operation
+   */
+  virtual void UpdateConnectionStatus(
+      const std::string& device_id,
+      const rpc::policy_table_interface_base::UserSetting
+          usb_transport_status) = 0;
+
+  /**
    * @brief Get default HMI level for application
    * @param policy_app_id Unique application id
    * @param default_hmi Default HMI level for application or empty, if value
@@ -290,6 +301,27 @@ class PolicyManager : public usage_statistics::StatisticsManager {
    */
   virtual bool GetDefaultHmi(const std::string& policy_app_id,
                              std::string* default_hmi) const = 0;
+
+  /**
+     * @brief Gets connection type of the specified device.
+     * @param device_id Generated or obtained id of device
+     * @return True if device is found in policy.
+     */
+  virtual bool GetDeviceConnectionType(
+      const std::string& device_id, std::string& out_connection_type) const = 0;
+
+  /**
+   * @brief Gets IDs for devices in policy table
+   * @return Container with devices IDs
+   */
+  virtual std::vector<std::string> GetDevicesIDs() const = 0;
+
+  /**
+   * @brief Gets USB transport status
+   * @return True if transport is enabled.
+   */
+  virtual rpc::policy_table_interface_base::UserSetting
+  GetDeviceUSBTransportStatus(const std::string& device_id) const = 0;
 
   /**
    * @brief Get priority for application

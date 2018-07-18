@@ -48,6 +48,7 @@ const std::string kCreateSchema =
     "  `carrier` VARCHAR(45), "
     "  `max_number_rfcom_ports` INTEGER,"
     "  `connection_type` VARCHAR(45), "
+    "  `usb_transport_status` VARCHAR(45), "
     "  `unpaired` BOOL "
     "); "
     "CREATE TABLE IF NOT EXISTS `usage_and_error_count`( "

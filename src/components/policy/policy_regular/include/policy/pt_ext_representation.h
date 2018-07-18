@@ -144,14 +144,17 @@ class PTExtRepresentation : public virtual PTRepresentation {
    * @param device_id Generated or obtained id of device
    * @return bool Success of operation
    */
-  virtual bool SetDeviceData(const std::string& device_id,
-                             const std::string& hardware = "",
-                             const std::string& firmware = "",
-                             const std::string& os = "",
-                             const std::string& os_version = "",
-                             const std::string& carrier = "",
-                             const uint32_t number_of_ports = 0,
-                             const std::string& connection_type = "") = 0;
+  virtual bool SetDeviceData(
+      const std::string& device_id,
+      const std::string& hardware = "",
+      const std::string& firmware = "",
+      const std::string& os = "",
+      const std::string& os_version = "",
+      const std::string& carrier = "",
+      const uint32_t number_of_ports = 0,
+      const std::string& connection_type = "",
+      const policy_table::UserSetting
+          usb_transport_status = policy_table::UserSetting::DISABLED) = 0;
 
   /**
    * @brief Sets user consent for particular mobile device,

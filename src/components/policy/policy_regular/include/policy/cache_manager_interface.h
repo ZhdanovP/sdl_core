@@ -93,6 +93,16 @@ class CacheManagerInterface {
       const std::string& policy_app_id) const = 0;
 
   /**
+     * @brief Updates USB status of mobile device in Policy Table.
+     * @param device_id Generated or obtained id of device
+     * @param usb_transport_status Status of USB transport.
+     * @return bool Success of operation
+     */
+  virtual bool UpdateConnectionStatus(
+      const std::string& device_id,
+      const policy_table::UserSetting usb_transport_status) = 0;
+
+  /**
    * @brief Returns true if Policy Table was not updated yet
    * from preloaded pt file.
    */
@@ -199,6 +209,28 @@ class CacheManagerInterface {
    */
   virtual policy_table::NumberOfNotificationsType GetNotificationsNumber(
       const std::string& priority) = 0;
+
+  /**
+    * @brief Gets connection type of the specified device.
+    * @param device_id Generated or obtained id of device
+    * @return True if device is found in policy.
+    */
+  virtual bool GetDeviceConnectionType(
+      const std::string& device_id, std::string& out_connection_type) const = 0;
+
+  /**
+   * @brief Gets IDs for devices in policy table
+   * @return Container with devices IDs
+   */
+  virtual std::vector<std::string> GetDevicesIDs() const = 0;
+
+  /**
+   * @brief Gets USB transport status
+   * @param device_id Generated or obtained id of device
+   * @return USB transport status.
+   */
+  virtual policy_table::UserSetting GetDeviceUSBTransportStatus(
+      const std::string& device_id) const = 0;
 
   /**
    * @brief Get priority for given application
@@ -409,14 +441,17 @@ class CacheManagerInterface {
    * @param device_id Generated or obtained id of device
    * @return bool Success of operation
    */
-  virtual bool SetDeviceData(const std::string& device_id,
-                             const std::string& hardware,
-                             const std::string& firmware,
-                             const std::string& os,
-                             const std::string& os_version,
-                             const std::string& carrier,
-                             const uint32_t number_of_ports,
-                             const std::string& connection_type) = 0;
+  virtual bool SetDeviceData(
+      const std::string& device_id,
+      const std::string& hardware = "",
+      const std::string& firmware = "",
+      const std::string& os = "",
+      const std::string& os_version = "",
+      const std::string& carrier = "",
+      const uint32_t number_of_ports = 0,
+      const std::string& connection_type = "",
+      const policy_table::UserSetting
+          usb_transport_status = policy_table::UserSetting::DISABLED) = 0;
 
   /**
    * @brief Sets user consent for particular mobile device,

@@ -3,6 +3,41 @@
 
 namespace rpc {
 namespace policy_table_interface_base {
+bool IsValidEnum(UserSetting val) {
+  switch (val) {
+    case ENABLED:
+      return true;
+    case DISABLED:
+      return true;
+    default:
+      return false;
+  }
+}
+
+const char* EnumToJsonString(UserSetting val) {
+  switch (val) {
+    case ENABLED:
+      return "ENABLED";
+    case DISABLED:
+      return "DISABLED";
+    default:
+      return "";
+  }
+}
+
+bool EnumFromJsonString(const std::string& literal, UserSetting* result) {
+  if ("ENABLED" == literal) {
+    *result = ENABLED;
+    return true;
+  }
+  if ("DISABLED" == literal) {
+    *result = DISABLED;
+    return true;
+  } else {
+    return false;
+  }
+}
+
 bool IsValidEnum(Priority val) {
   switch (val) {
     case P_EMERGENCY:

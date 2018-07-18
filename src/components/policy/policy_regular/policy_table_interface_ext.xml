@@ -243,6 +243,11 @@
 
     <typedef name="UserConsentRecords" scope="internal" map="true" type="ConsentRecords" minsize="0" maxsize="1000"/>
 
+    <enum name="UserSetting" scope="internal">
+        <element name="ENABLED" />
+        <element name="DISABLED" />
+    </enum>
+
     <struct name="DeviceParams" scope="internal">
         <param name="hardware" type="String" maxlength="255" mandatory="false"/>
         <param name="firmware_rev" type="String" maxlength="255" nullable="true" mandatory="false"/>
@@ -251,6 +256,7 @@
         <param name="carrier" type="String" maxlength="255" nullable="true" mandatory="false"/>
         <param name="user_consent_records" type="UserConsentRecords" mandatory="false"/>
         <param name="max_number_rfcom_ports" type="Integer" maxvalue="255" mandatory="false"/>
+        <param name="usb_transport_status" type="UserSetting" mandatory="false"/>
     </struct>
     <!-- device_data section end -->
 

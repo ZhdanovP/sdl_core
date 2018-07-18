@@ -421,6 +421,9 @@ struct UsageAndErrorCounts : CompositeType {
 
 struct DeviceParams : CompositeType {
  public:
+  Optional<String<0, 255> > connection_type;
+  Optional<Enum<UserSetting> > usb_transport_status;
+
   DeviceParams();
   ~DeviceParams();
   explicit DeviceParams(const Json::Value* value__);

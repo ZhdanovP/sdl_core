@@ -219,6 +219,16 @@ class CacheManager : public CacheManagerInterface {
   virtual utils::SharedPtr<policy_table::Table> GenerateSnapshot();
 
   /**
+     * @brief Updates USB status of mobile device in Policy Table.
+     * @param device_id Generated or obtained id of device
+     * @param usb_transport_status Status of USB transport.
+     * @return bool Success of operation
+     */
+  bool UpdateConnectionStatus(
+      const std::string& device_id,
+      const policy_table::UserSetting usb_transport_status) OVERRIDE;
+
+  /**
    * Applies policy table to the current table
    * @param update_pt policy table
    * @return true if successfully
@@ -365,6 +375,28 @@ class CacheManager : public CacheManagerInterface {
                                    StringArray& disallowed_groups) const;
 
   /**
+   * @brief Gets connection type of the specified device.
+   * @param device_id Generated or obtained id of device
+   * @return True if device is found in policy.
+   */
+  bool GetDeviceConnectionType(const std::string& device_id,
+                               std::string& out_connection_type) const OVERRIDE;
+
+  /**
+   * @brief Gets IDs for devices in policy table
+   * @return Container with devices IDs
+   */
+  std::vector<std::string> GetDevicesIDs() const OVERRIDE;
+
+  /**
+   * @brief Gets USB transport status
+   * @param device_id Generated or obtained id of device
+   * @return USB transport status.
+   */
+  policy_table::UserSetting GetDeviceUSBTransportStatus(
+      const std::string& device_id) const OVERRIDE;
+
+  /**
    * @brief Gets list of groups permissions from policy table
    * @param device_id Unique device id, which hosts specific application
    * @param policy_app_id Unique application id
@@ -406,7 +438,9 @@ class CacheManager : public CacheManagerInterface {
                      const std::string& os_version = "",
                      const std::string& carrier = "",
                      const uint32_t number_of_ports = 0,
-                     const std::string& connection_type = "");
+                     const std::string& connection_type = "",
+                     const policy_table::UserSetting usb_transport_status =
+                         policy_table::UserSetting::DISABLED) OVERRIDE;
 
   /**
    * @brief Sets user consent for particular mobile device,
