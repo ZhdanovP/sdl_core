@@ -193,7 +193,8 @@ class PolicyHandler : public PolicyHandlerInterface,
 
   /**
    * @brief Gets USB transport status
-   * @return True if transport is enabled.
+   * @param device_id Generated or obtained id of device
+   * @return hmi_apis::Common_UserSetting::eType Status of the USB transport
    */
   hmi_apis::Common_UserSetting::eType GetDeviceUSBTransportStatus(
       const std::string& device_id) const OVERRIDE;
@@ -202,7 +203,6 @@ class PolicyHandler : public PolicyHandlerInterface,
    * @brief Updates USB status of mobile device in Policy Table.
    * @param device_id Generated or obtained id of device
    * @param usb_transport_status Status of the USB transport
-   * @return bool Success of operation
    */
   void OnDeviceConnectionStatus(
       const std::string& device_id,
