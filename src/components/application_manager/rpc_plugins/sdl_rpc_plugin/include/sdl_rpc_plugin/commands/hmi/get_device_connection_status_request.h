@@ -30,8 +30,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef SRC_COMPONENTS_APPLICATION_MANAGER_INCLUDE_APPLICATION_MANAGER_COMMANDS_HMI_GET_DEVICE_CONNECTION_STATUS_REQUEST_H_
-#define SRC_COMPONENTS_APPLICATION_MANAGER_INCLUDE_APPLICATION_MANAGER_COMMANDS_HMI_GET_DEVICE_CONNECTION_STATUS_REQUEST_H_
+#ifndef SRC_COMPONENTS_APPLICATION_MANAGER_RPC_PLUGINS_SDL_RPC_PLUGIN_INCLUDE_SDL_RPC_PLUGIN_COMMANDS_HMI_GET_DEVICE_CONNECTION_STATUS_REQUEST_H_
+#define SRC_COMPONENTS_APPLICATION_MANAGER_RPC_PLUGINS_SDL_RPC_PLUGIN_INCLUDE_SDL_RPC_PLUGIN_COMMANDS_HMI_GET_DEVICE_CONNECTION_STATUS_REQUEST_H_
 
 #include "application_manager/commands/request_from_hmi.h"
 
@@ -73,8 +73,6 @@ class GetDeviceConnectionStatusRequest
   void Run() OVERRIDE;
 
  private:
-  DISALLOW_COPY_AND_ASSIGN(GetDeviceConnectionStatusRequest);
-
   /**
    * @brief Reads the mandatory parameters
    * @param device_data Corresponding to <device> parameter DeviceInfo
@@ -101,60 +99,62 @@ class GetDeviceConnectionStatusRequest
    * @brief Check whether the string contains invalid characters
    */
   bool IsSyntaxWrong(const std::string& str) const;
-};
-
-/**
- * @brief Functor to retrieve all the data from the "device_data"
- * section of the policy table and store <ID>, <name> of device,
- * <usb_transport_status>, <transport_type> as array with key <device>
- * in the message
- */
-class DeviceDataRetriever {
- public:
-  /**
-   * @param message Message to store the retrieved data
-   */
-  DeviceDataRetriever(smart_objects::SmartObject& message,
-                      app_mngr::ApplicationManager& application_manager)
-      : message_(message)
-      , application_manager_(application_manager)
-      , index_(0) {}
 
   /**
-   * @brief Retrieves the corresponding to data device_id
-   * from Policy Table
-   * @param device_id ID of the device in the Policy Table
+   * @brief Functor to retrieve all the data from the "device_data"
+   * section of the policy table and store <ID>, <name> of device,
+   * <usb_transport_status>, <transport_type> as array with key <device>
+   * in the message
    */
-  void operator()(const std::string& device_id);
+  class DeviceDataRetriever {
+   public:
+    /**
+     * @param message Message to store the retrieved data
+     */
+    DeviceDataRetriever(smart_objects::SmartObject& message,
+                        app_mngr::ApplicationManager& application_manager)
+        : message_(message)
+        , application_manager_(application_manager)
+        , index_(0) {}
 
-  /**
-   * @brief Retrieves the corresponding to data device_id
-   * from Policy Table and stores in the index of the
-   * "device" section of the message
-   * @param device_id ID of the device in the Policy Table
-   * @param index Index position in "device" section of the message
-   * to store data.
-   */
-  void FillDataForDeviceAtIndex(const std::string& device_id, size_t index);
+    /**
+     * @brief Retrieves the corresponding to data device_id
+     * from Policy Table
+     * @param device_id ID of the device in the Policy Table
+     */
+    void operator()(const std::string& device_id);
 
- private:
-  /**
-   * @brief Reads he corresponding to device_id
-   * name of the device.
-   * @param device_id ID of the device in the Policy Table
-   * @param out_device_name On success the corresponding
-   * to device_id name is stored here
-   * @return True if the out_device_name is valid
-   */
-  bool GetDeviceName(const std::string& device_id,
-                     std::string& out_device_name);
+    /**
+     * @brief Retrieves the corresponding to data device_id
+     * from Policy Table and stores in the index of the
+     * "device" section of the message
+     * @param device_id ID of the device in the Policy Table
+     * @param index Index position in "device" section of the message
+     * to store data.
+     */
+    void FillDataForDeviceAtIndex(const std::string& device_id, const size_t index);
 
-  smart_objects::SmartObject& message_;
-  app_mngr::ApplicationManager& application_manager_;
-  size_t index_;
+   private:
+    /**
+     * @brief Reads he corresponding to device_id
+     * name of the device.
+     * @param device_id ID of the device in the Policy Table
+     * @param out_device_name On success the corresponding
+     * to device_id name is stored here
+     * @return True if the out_device_name is valid
+     */
+    bool GetDeviceName(const std::string& device_id,
+                       std::string& out_device_name);
+
+    smart_objects::SmartObject& message_;
+    app_mngr::ApplicationManager& application_manager_;
+    size_t index_;
+  };
+
+  DISALLOW_COPY_AND_ASSIGN(GetDeviceConnectionStatusRequest);
 };
 
 }  // namespace commands
 }  // namespace application_manager
 
-#endif  // SRC_COMPONENTS_APPLICATION_MANAGER_INCLUDE_APPLICATION_MANAGER_COMMANDS_HMI_GET_DEVICE_CONNECTION_STATUS_REQUEST_H_
+#endif  // SRC_COMPONENTS_APPLICATION_MANAGER_RPC_PLUGINS_SDL_RPC_PLUGIN_INCLUDE_SDL_RPC_PLUGIN_COMMANDS_HMI_GET_DEVICE_CONNECTION_STATUS_REQUEST_H_

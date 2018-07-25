@@ -62,6 +62,3 @@ void GetSystemInfoRequest::Run() {
 }  // namespace commands
 
 }  // namespace application_manager
-
-
-

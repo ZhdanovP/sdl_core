@@ -73,9 +73,7 @@ class OnDeviceConnectionStatusNotification
 
  private:
   /**
-   * @brief Reads the mandatory parameters
-   * as defined in APPLINK-28267
-   * On successfull
+   * @brief Reads the mandatory parameters On successfull
    * @param device_data Corresponding to <device> parameter DeviceInfo
    * structure.
    * @param out_device_id On success the "id" of the device is stored here.

@@ -47,7 +47,6 @@ namespace commands {
 /**
  * @brief Functor used to check the
  * availability of invalid characters
- * in string as defined in APPLINK-28280
  */
 struct InvalidCharacterChecker {
   bool operator()(const char c) const {
@@ -58,12 +57,13 @@ struct InvalidCharacterChecker {
 
 CREATE_LOGGERPTR_GLOBAL(logger_, "DeviceDataRetriever")
 
-void DeviceDataRetriever::operator()(const std::string& device_id) {
+void GetDeviceConnectionStatusRequest::DeviceDataRetriever::operator()(
+    const std::string& device_id) {
   FillDataForDeviceAtIndex(device_id, index_++);
 }
 
-void DeviceDataRetriever::FillDataForDeviceAtIndex(const std::string& device_id,
-                                                   size_t index) {
+void GetDeviceConnectionStatusRequest::DeviceDataRetriever::
+    FillDataForDeviceAtIndex(const std::string& device_id, const size_t index) {
   std::string connection_type;
   application_manager_.GetPolicyHandler().GetDeviceConnectionType(
       device_id, connection_type);
@@ -85,8 +85,8 @@ void DeviceDataRetriever::FillDataForDeviceAtIndex(const std::string& device_id,
   current_device[strings::usb_transport_status] = usb_transport_status;
 }
 
-bool DeviceDataRetriever::GetDeviceName(const std::string& device_id,
-                                        std::string& out_device_name) {
+bool GetDeviceConnectionStatusRequest::DeviceDataRetriever::GetDeviceName(
+    const std::string& device_id, std::string& out_device_name) {
   LOG4CXX_AUTO_TRACE(logger_);
   connection_handler::DeviceHandle device_handle;
   connection_handler::ConnectionHandler& connection_handler =
@@ -102,7 +102,7 @@ bool DeviceDataRetriever::GetDeviceName(const std::string& device_id,
   const int32_t invalid_result = -1;
   if (invalid_result ==
       session_observer.GetDataOnDeviceID(
-          device_handle, &out_device_name, NULL, NULL, NULL)) {
+          device_handle, &out_device_name, nullptr, nullptr, nullptr)) {
     LOG4CXX_WARN(logger_,
                  "Failed to extract device name for device: "
                      << device_id << " with handle: " << device_handle);
