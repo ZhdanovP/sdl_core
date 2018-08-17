@@ -155,9 +155,6 @@ const std::map<std::string, std::string> GetModuleDataToCapabilitiesMapping() {
   mapping["volume"] = "volumeAvailable";
   mapping["equalizerSettings"] = "equalizerAvailable";
 
-  // light
-  mapping["supportedLights"] = "";
-
   // hmi settings
   mapping["distanceUnit"] = "distanceUnitAvailable";
   mapping["temperatureUnit"] = "temperatureUnitAvailable";
