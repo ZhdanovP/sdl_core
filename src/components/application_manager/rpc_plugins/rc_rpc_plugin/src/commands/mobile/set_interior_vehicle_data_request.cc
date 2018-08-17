@@ -148,11 +148,15 @@ const std::map<std::string, std::string> GetModuleDataToCapabilitiesMapping() {
   mapping["massageMode"] = "massageModeAvailable";
   mapping["massageCushionFirmness"] = "massageCushionFirmnessAvailable";
   mapping["memory"] = "memoryAvailable";
+
   // audio
   mapping["source"] = "sourceAvailable";
   mapping["keepContext"] = "keepContextAvailable";
   mapping["volume"] = "volumeAvailable";
   mapping["equalizerSettings"] = "equalizerAvailable";
+
+  // light
+  mapping["supportedLights"] = "";
 
   // hmi settings
   mapping["distanceUnit"] = "distanceUnitAvailable";
@@ -378,7 +382,7 @@ ModuleCapability GetModuleDataCapabilities(
             GetHmiControlDataCapabilities(caps, module_data[param.first]);
       } else {
         module_data_capabilities =
-            GetControlDataCapabilities(caps[0], module_data[param.first]);
+            GetControlDataCapabilities(caps, module_data[param.first]);
       }
     }
   }
