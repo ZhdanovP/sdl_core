@@ -191,6 +191,14 @@ const std::string LightName(const smart_objects::SmartObject& light_name) {
   return ok ? name : "unknown";
 }
 
+/**
+ * @brief Check whether the parameter exist in capabilities
+ * @param smart object of capabilities
+ * @param mapping - map of module data and capabilities
+ * @param request_parameter - string
+ * @param switched_off_result - ref of mobile_apis::Result
+ * @return success if parameter exist in capabilities missedParam otherwise
+ */
 capabilitiesStatus GetItemCapability(
     const smart_objects::SmartObject& capabilities,
     const std::map<std::string, std::string>& mapping,
@@ -234,6 +242,12 @@ capabilitiesStatus GetItemCapability(
   return capabilitiesStatus::success;
 }
 
+/**
+ * @brief Check whether the cpabilities for light allowed
+ * @param smart object of capabilities
+ * @param smart object of control_data
+ * @return pair of state and capability status - ModuleCapability
+ */
 ModuleCapability GetLightDataCapabilities(
     const smart_objects::SmartObject& capabilities,
     const smart_objects::SmartObject& control_data) {
@@ -262,6 +276,12 @@ ModuleCapability GetLightDataCapabilities(
   return std::make_pair("", capabilitiesStatus::success);
 }
 
+/**
+ * @brief Check whether the light name exists in capabilities
+ * @param smart object of capabilities_status
+ * @param smart object of light_data
+ * @return pair of state and capability status - ModuleCapability
+ */
 ModuleCapability GetLightNameCapabilities(
     const smart_objects::SmartObject& capabilities_status,
     const smart_objects::SmartObject& light_data) {
@@ -280,7 +300,6 @@ ModuleCapability GetLightNameCapabilities(
   LOG4CXX_DEBUG(logger_, "There is no such light name in capabilities");
   return std::make_pair(message_params::kLightState,
                         capabilitiesStatus::missedLightName);
-  ;
 }
 
 /**
@@ -363,6 +382,12 @@ ModuleCapability GetHmiControlDataCapabilities(
   return std::make_pair("", capabilitiesStatus::success);
 }
 
+/**
+ * @brief Check whether rc module data capabilities are presented
+ * @param smart object of rc_capabilities
+ * @param smart object of module_data
+ * @return pair of state and capability status - ModuleCapability
+ */
 ModuleCapability GetModuleDataCapabilities(
     const smart_objects::SmartObject& rc_capabilities,
     const smart_objects::SmartObject& module_data) {
