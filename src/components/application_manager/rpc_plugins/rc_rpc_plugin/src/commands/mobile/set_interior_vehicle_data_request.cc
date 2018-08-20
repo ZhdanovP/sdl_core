@@ -59,7 +59,7 @@ std::vector<std::string> GetModuleReadOnlyParams(
     module_ro_params.push_back(kState);
     module_ro_params.push_back(kSisData);
   } else if (enums_value::kLight == module_type) {
-    module_ro_params.push_back(kStatus);
+    module_ro_params.push_back(kLightStatus);
   }
 
   return module_ro_params;
@@ -79,9 +79,9 @@ const std::map<std::string, std::string> GetModuleTypeToDataMapping() {
 const std::map<std::string, std::string> GetLightCapabilitiesMapping() {
   std::map<std::string, std::string> mapping = {
       {message_params::kId, strings::kName},
-      {message_params::kStatus, strings::kStatusAvailable},
-      {message_params::kDensity, strings::kDensityAvailable},
-      {message_params::kColor, strings::kRGBColorSpaceAvailable}};
+      {message_params::kLightStatus, strings::kStatusAvailable},
+      {message_params::kLightDensity, strings::kDensityAvailable},
+      {message_params::kLightColor, strings::kRGBColorSpaceAvailable}};
   return mapping;
 }
 
@@ -191,7 +191,7 @@ const std::string LightName(const smart_objects::SmartObject& light_name) {
   return ok ? name : "unknown";
 }
 
-ModuleCapability GetItemCapability(
+capabilitiesStatus GetItemCapability(
     const smart_objects::SmartObject& capabilities,
     const std::map<std::string, std::string>& mapping,
     const std::string& request_parameter,
@@ -202,7 +202,7 @@ ModuleCapability GetItemCapability(
     LOG4CXX_DEBUG(logger_,
                   "Parameter " << request_parameter
                                << " doesn't exist in capabilities.");
-    return std::make_pair("", capabilitiesStatus::missedParam);
+    return capabilitiesStatus::missedParam;
   }
 
   const std::string& caps_key = it->second;
@@ -216,7 +216,7 @@ ModuleCapability GetItemCapability(
     LOG4CXX_DEBUG(logger_,
                   "Capability " << caps_key
                                 << " is missed in RemoteControl capabilities");
-    return std::make_pair("", capabilitiesStatus::missedParam);
+    return capabilitiesStatus::missedParam;
   }
 
   if (!capabilities[caps_key].asBool()) {
@@ -224,15 +224,14 @@ ModuleCapability GetItemCapability(
                   "Capability "
                       << caps_key
                       << " is switched off in RemoteControl capabilities");
-    ModuleCapability status =
-        std::make_pair("", capabilitiesStatus::missedParam);
+    capabilitiesStatus status = capabilitiesStatus::missedParam;
     if (mobile_apis::Result::READ_ONLY == switched_off_result) {
-      status = std::make_pair("", capabilitiesStatus::readOnly);
+      status = capabilitiesStatus::readOnly;
     }
     return status;
   }
 
-  return std::make_pair("", capabilitiesStatus::success);
+  return capabilitiesStatus::success;
 }
 
 ModuleCapability GetLightDataCapabilities(
@@ -248,16 +247,15 @@ ModuleCapability GetLightDataCapabilities(
       continue;
     }
 
-    const ModuleCapability item_capability =
+    const capabilitiesStatus status_item_capability =
         GetItemCapability(capabilities,
                           mapping,
                           request_parameter,
                           mobile_apis::Result::READ_ONLY);
 
-    if (capabilitiesStatus::success != item_capability.second) {
+    if (capabilitiesStatus::success != status_item_capability) {
       return std::make_pair(message_params::kLightState,
-                            item_capability.second);
-      ;
+                            status_item_capability);
     }
   }
 
@@ -285,6 +283,13 @@ ModuleCapability GetLightNameCapabilities(
   ;
 }
 
+/**
+ * @brief Check whether the exists light data related to correspondent
+ * capabilities
+ * @param smart object of capabilities
+ * @param smart object of control_data
+ * @return pair of state and capability status - ModuleCapability
+ */
 ModuleCapability GetControlDataCapabilities(
     const smart_objects::SmartObject& capabilities,
     const smart_objects::SmartObject& control_data) {
@@ -315,20 +320,27 @@ ModuleCapability GetControlDataCapabilities(
       return light_capability;
     }
 
-    const ModuleCapability item_capability =
+    const capabilitiesStatus status_item_capability =
         GetItemCapability(capabilities[0],
                           mapping,
                           request_parameter,
                           mobile_apis::Result::UNSUPPORTED_RESOURCE);
 
-    if (capabilitiesStatus::success != item_capability.second) {
-      return item_capability;
+    if (capabilitiesStatus::success != status_item_capability) {
+      return std::make_pair("", status_item_capability);
     }
   }
 
   return std::make_pair("", capabilitiesStatus::success);
 }
 
+/**
+ * @brief Check whether the exists hmi data related to correspondent
+ * capabilities
+ * @param smart object of capabilities
+ * @param smart object of control_data
+ * @return pair of state and capability status - ModuleCapability
+ */
 ModuleCapability GetHmiControlDataCapabilities(
     const smart_objects::SmartObject& capabilities,
     const smart_objects::SmartObject& control_data) {
@@ -337,19 +349,14 @@ ModuleCapability GetHmiControlDataCapabilities(
       GetModuleDataToCapabilitiesMapping();
 
   for (auto it = control_data.map_begin(); it != control_data.map_end(); ++it) {
-    const ModuleCapability item_capability =
+    const capabilitiesStatus status_item_capability =
         GetItemCapability(capabilities,
                           mapping,
                           it->first,
                           mobile_apis::Result::UNSUPPORTED_RESOURCE);
 
-    if (capabilitiesStatus::success != item_capability.second) {
-      return item_capability;
-    }
-    if (message_params::kBand == request_parameter &&
-        !CheckRadioBandByCapabilities(capabilities_status,
-                                      control_data[request_parameter])) {
-      return false;
+    if (capabilitiesStatus::success != status_item_capability) {
+      return std::make_pair("", status_item_capability);
     }
   }
 
@@ -637,10 +644,10 @@ bool CheckReadOnlyParamsForLight(
     auto it = light_state.asArray()->begin();
 
     for (; it != light_state.asArray()->end(); ++it) {
-      if (it->keyExists(message_params::kStatus)) {
+      if (it->keyExists(message_params::kLightStatus)) {
         const mobile_apis::LightStatus::eType light_status =
             static_cast<mobile_apis::LightStatus::eType>(
-                (*it)[message_params::kStatus].asUInt());
+                (*it)[message_params::kLightStatus].asUInt());
 
         if (helpers::Compare<mobile_apis::LightStatus::eType,
                              helpers::EQ,
@@ -651,7 +658,7 @@ bool CheckReadOnlyParamsForLight(
                                            mobile_apis::LightStatus::INVALID)) {
           LOG4CXX_DEBUG(logger_,
                         "READ ONLY parameter. Status = "
-                            << (*it)[message_params::kStatus].asInt());
+                            << (*it)[message_params::kLightStatus].asInt());
           return true;
         }
       }
