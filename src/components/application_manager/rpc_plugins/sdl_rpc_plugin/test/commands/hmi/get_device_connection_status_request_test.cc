@@ -188,6 +188,7 @@ TEST_F(GetDeviceConnectionStatusRequestTest,
 
   SetSuccessfulDataRetrievalExpectations();
 
+  command->Init();
   command->Run();
 
   // After command runnning, [devices] was rewritten and ref 'devices' not valid
@@ -243,6 +244,7 @@ TEST_F(
                   hmi_apis::Common_Result::INVALID_DATA)))
       .WillOnce(Return(true));
 
+  command->Init();
   command->Run();
 }
 
@@ -274,6 +276,7 @@ TEST_F(GetDeviceConnectionStatusRequestTest,
 
   SetSuccessfulDataRetrievalExpectations();
 
+  command->Init();
   command->Run();
 
   const SmartObject& msg_params_so = (*command_msg_)[strings::msg_params];
@@ -329,6 +332,7 @@ TEST_F(GetDeviceConnectionStatusRequestTest,
 
   SetSuccessfulDataRetrievalExpectations();
 
+  command->Init();
   command->Run();
 
   const SmartObject& msg_params_so = (*command_msg_)[strings::msg_params];
@@ -384,6 +388,7 @@ TEST_F(GetDeviceConnectionStatusRequestTest,
 
   SetSuccessfulDataRetrievalExpectations();
 
+  command->Init();
   command->Run();
 
   const SmartObject& msg_params_so = (*command_msg_)[strings::msg_params];
@@ -426,6 +431,7 @@ TEST_F(GetDeviceConnectionStatusRequestTest,
   EXPECT_CALL(mock_policy_handler_, GetDeviceConnectionType(_, _)).Times(0);
   EXPECT_CALL(app_mngr_, GetDeviceTransportType(_)).Times(0);
 
+  command->Init();
   command->Run();
 
   const SmartObject& msg_params_so = (*command_msg_)[strings::msg_params];
